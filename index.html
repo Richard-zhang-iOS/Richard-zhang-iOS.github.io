@@ -300,7 +300,14 @@
       
         
           
-            <h1 id="JavaScriptCore介绍"><a href="#JavaScriptCore介绍" class="headerlink" title="JavaScriptCore介绍"></a>JavaScriptCore介绍</h1><p>JavaScriptCore 是 JavaScript 引擎，通常会被叫做虚拟机，专门设计来解释和执行 JavaScript 代码，可以理解为一个浏览器的运行内核。</p>
+            <hr>
+<p>title: JavaScriptCore-C语言接口API详解<br>date: 2018-7-2 15:3824<br>tags: </p>
+<ul>
+<li>blog</li>
+<li>markdown</li>
+</ul>
+<hr>
+<h1 id="JavaScriptCore介绍"><a href="#JavaScriptCore介绍" class="headerlink" title="JavaScriptCore介绍"></a>JavaScriptCore介绍</h1><p>JavaScriptCore 是 JavaScript 引擎，通常会被叫做虚拟机，专门设计来解释和执行 JavaScript 代码，可以理解为一个浏览器的运行内核。</p>
 <p>JavaScriptCore Framework 是 iOS7 引入的新功能，其实就是基于 Webkit 中以 C/C++ 实现的 JavaScriptCore 的一个封装,大多数 iOS 比较熟悉的是它的 Objective-C API，可以用简洁的方式实现 JS 与Native 交互，其实它还有C API的部分，虽然也是开源的，但是在查看源代码时只有较少的介绍，而且我们知道 Objective-C API 只是 C API 接口的封装。本文主要介绍 C API 部分，帮助大家更好理解 JavaScriptCore Framework。</p>
 <h2 id="JavaScriptCore-C-API"><a href="#JavaScriptCore-C-API" class="headerlink" title="JavaScriptCore C API"></a>JavaScriptCore C API</h2><p>JavaScriptCore C API 部分包含六个类 下面我们详细解释每个类的作用及用法</p>
 <ul>
