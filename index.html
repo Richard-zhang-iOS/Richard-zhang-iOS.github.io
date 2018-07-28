@@ -334,9 +334,7 @@
 <p>运行：执行最终的可执行文件</p>
 <p>如果是普通的C语言代码，我们使用的是传统的编译运行，那么一个函数的执行内容，在编译阶段其实就确定了，执行的时候只要去执行对应的内存地址的程序就好。</p>
 <p>而在<code>runtime</code>中，编译阶段只能确定最终要执行的函数名，但是具体执行的时候，执行的是什么程序，是在运行的时候才能确定，大大增加了程序的灵活性。</p>
-<h3 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h3><p><code>Runtime</code> 基本是用 <code>C</code> 和<code>汇编</code>写的，可见苹果为了动态系统的高效而作出的努力。你可以在<a href="https://link.juejin.im?target=http%3A%2F%2Fwww.opensource.apple.com%2Fsource%2Fobjc4%2F" target="_blank" rel="noopener">这里</a>下到苹果维护的开源代码。苹果和GNU各自维护一个开源的 <a href="https://link.juejin.im?target=https%3A%2F%2Fgithub.com%2FRetVal%2Fobjc-runtime" target="_blank" rel="noopener">runtime</a> 版本，这两个版本之间都在努力的保持一致。</p>
-<p>平时的业务中主要是使用<a href="https://link.juejin.im?target=https%3A%2F%2Fdeveloper.apple.com%2Freference%2Fobjectivec%2Fobjective_c_runtime%23%2F%2Fapple_ref%2Fdoc%2Fuid%2FTP40001418-CH1g-126286" target="_blank" rel="noopener">官方Api</a>，解决我们框架性的需求。</p>
-<p>在这里先放上runtime的源码和runtime官方api:</p>
+<h3 id="源码地址"><a href="#源码地址" class="headerlink" title="源码地址"></a>源码地址</h3><p><code>Runtime</code> 基本是用 <code>C</code> 和<code>汇编</code>写的，可见苹果为了动态系统的高效而作出的努力。你可以在<a href="https://link.juejin.im?target=http%3A%2F%2Fwww.opensource.apple.com%2Fsource%2Fobjc4%2F" target="_blank" rel="noopener">这里</a>下到苹果维护的开源代码。在这里先放上runtime的源码和runtime官方api:</p>
 <ul>
 <li>源码：<a href="https://github.com/RetVal/objc-runtime">objc-runtime</a></li>
 <li>官方API：<a href="https://developer.apple.com/reference/objectivec/objective_c_runtime#//apple_ref/doc/uid/TP40001418-CH1g-126286" target="_blank" rel="noopener">Objective-C Runtime Reference</a></li>
