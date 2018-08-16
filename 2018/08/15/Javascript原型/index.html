@@ -87,11 +87,13 @@
 <meta property="og:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象原型链 数组原型链 总结  Javascript中的对象对象是若干属性的集合，在Javascript中，万物皆对象，方法（Function）是对象，方法的原型(Function.prototype)是对象 原型">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/Users/yanqiangzhang/Downloads/61384325d3246cc0925362380cecf50f.png">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/Javascript原型/res/constouctor.png">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/Javascript原型/res/array.png">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/Javascript原型/res/object.png">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/Javascript原型/res/array.png">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/Javascript原型/res/array.png">
 <meta property="og:image" content="https://images2015.cnblogs.com/blog/593627/201510/593627-20151030202435591-481237570.png">
-<meta property="og:updated_time" content="2018-08-16T03:43:42.673Z">
+<meta property="og:updated_time" content="2018-08-16T03:44:55.997Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript原型总结">
 <meta name="twitter:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象原型链 数组原型链 总结  Javascript中的对象对象是若干属性的集合，在Javascript中，万物皆对象，方法（Function）是对象，方法的原型(Function.prototype)是对象 原型">
@@ -341,13 +343,19 @@
 <h2 id="构造函数原型图"><a href="#构造函数原型图" class="headerlink" title="构造函数原型图"></a>构造函数原型图</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function Animal (color) &#123;</span><br><span class="line">    this.color = color</span><br><span class="line">&#125;</span><br><span class="line">var dog =  new Animal (&apos;黑色&apos;)</span><br></pre></td></tr></table></figure>
 <p>当我们创建一个函数时原型如下:</p>
 <p><img src="/Users/yanqiangzhang/Downloads/61384325d3246cc0925362380cecf50f.png" alt="61384325d3246cc0925362380cecf50f"></p>
+<p align="center"><br>  <img src="./res/constouctor.png" alt="constouctor" title="constouctor"><br></p>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//补充</span><br><span class="line">Animal.prototype._proto_ === Object.prototype</span><br></pre></td></tr></table></figure>
 <h2 id="完整对象原型链"><a href="#完整对象原型链" class="headerlink" title="完整对象原型链"></a>完整对象原型链</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123; name: &apos;陈二狗&apos; &#125;</span><br></pre></td></tr></table></figure>
 <p><img src="./res/array.png" alt="array"></p>
-<p align="center"><br>  <img src="./res/array.png" alt="array" title="array"><br></p>
+<p align="center"><br>  <img src="./res/object.png" alt="object" title="object"><br></p>
 
 <h2 id="数组原型链"><a href="#数组原型链" class="headerlink" title="数组原型链"></a>数组原型链</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var arr = [&apos;第一个数&apos;,&apos;第二个数&apos;,&apos;第三个数&apos;]</span><br></pre></td></tr></table></figure>
 <p><img src="./res/array.png" alt="array"></p>
+<p align="center"><br>  <img src="./res/array.png" alt="array" title="array"><br></p>
+
+
+
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>现在就对上面的例子中分析得到的结果/关系进行图解，相信这张图可以让你豁然开朗。</p>
 <p><img src="https://images2015.cnblogs.com/blog/593627/201510/593627-20151030202435591-481237570.png" alt="img"></p>
 <p>对于上图的总结如下看具体代码：</p>
