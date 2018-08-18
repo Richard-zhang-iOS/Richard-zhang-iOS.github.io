@@ -79,22 +79,22 @@
 
 
 
-<meta name="description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结  Javascript中的对象对象是若干属性的集合，在Javascript中，万物皆对象，方法（Function）是对象，方法的原型(Function.prototype)是对象">
+<meta name="description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结">
 <meta name="keywords" content="prototype">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript原型总结">
 <meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/JavaScript原型/index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
-<meta property="og:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结  Javascript中的对象对象是若干属性的集合，在Javascript中，万物皆对象，方法（Function）是对象，方法的原型(Function.prototype)是对象">
+<meta property="og:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/JavaScript原型/res/constouctor.png">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/JavaScript原型/res/object.png">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/JavaScript原型/res/array.png">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/JavaScript原型/res/summary.png">
-<meta property="og:updated_time" content="2018-08-18T06:38:39.683Z">
+<meta property="og:updated_time" content="2018-08-18T07:01:47.342Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript原型总结">
-<meta name="twitter:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结  Javascript中的对象对象是若干属性的集合，在Javascript中，万物皆对象，方法（Function）是对象，方法的原型(Function.prototype)是对象">
+<meta name="twitter:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结">
 <meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/15/JavaScript原型/res/constouctor.png">
 
 
@@ -367,6 +367,7 @@
 <li>数组原型链</li>
 <li>总结</li>
 </ul>
+<a id="more"></a>
 <h2 id="Javascript中的对象"><a href="#Javascript中的对象" class="headerlink" title="Javascript中的对象"></a>Javascript中的对象</h2><p><strong>对象</strong>是若干属性的集合，在Javascript中，万物皆对象，方法（Function）是对象，方法的原型(Function.prototype)是对象</p>
 <h2 id="原型中所涉及的概念"><a href="#原型中所涉及的概念" class="headerlink" title="原型中所涉及的概念"></a>原型中所涉及的概念</h2><p><strong>原型:</strong>原型是一个<strong>对象</strong>，其他对象可以通过它实现继承。它为构造函数设置一个prototype属性。prototype属性包含一个对象，所有实例对象需要共享的属性和方法，都放在这个对象里面；那些不需要共享的属性和方法，就放在构造函数里面</p>
 <p><strong>原型对象（prototype）：</strong>这个对象包含所有实例共享的属性和方法。</p>
