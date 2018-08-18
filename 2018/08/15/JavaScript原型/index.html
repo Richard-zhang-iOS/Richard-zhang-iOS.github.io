@@ -87,15 +87,15 @@
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
 <meta property="og:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/images/constouctor.png">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/constouctor.png?raw=true">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/object.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/array.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/summary.png?raw=true">
-<meta property="og:updated_time" content="2018-08-18T08:08:47.856Z">
+<meta property="og:updated_time" content="2018-08-18T08:12:18.852Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript原型总结">
 <meta name="twitter:description" content="Javascript原型本文为了解决以下问题：  Javascript中的对象 原型中所涉及的概念（__proto__,prototype,constructor） 构造函数原型链 完整对象59 原型链 数组原型链 总结">
-<meta name="twitter:image" content="https://github.com/images/constouctor.png">
+<meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/constouctor.png?raw=true">
 
 
 
@@ -394,10 +394,10 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(Array.prototype.constructor === Array);       // true</span><br></pre></td></tr></table></figure>
 <h2 id="构造函数原型图"><a href="#构造函数原型图" class="headerlink" title="构造函数原型图"></a>构造函数原型图</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function Animal (color) &#123;</span><br><span class="line">    this.color = color</span><br><span class="line">&#125;</span><br><span class="line">var dog =  new Animal (&apos;黑色&apos;)</span><br></pre></td></tr></table></figure>
 <p>当我们创建一个函数时原型如下:</p>
-<p><img src="/images/constouctor.png" alt="constouctor"></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/constouctor.png?raw=true" alt="backgroud" title="backgroud"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//补充</span><br><span class="line">Animal.prototype._proto_ === Object.prototype</span><br></pre></td></tr></table></figure>
 <h2 id="完整对象原型链"><a href="#完整对象原型链" class="headerlink" title="完整对象原型链"></a>完整对象原型链</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123; name: &apos;陈二狗&apos; &#125;</span><br></pre></td></tr></table></figure>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/constouctor.png?raw=true" alt="backgroud" title="backgroud"></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/object.png?raw=true" alt="backgroud" title="backgroud"></p>
 <h2 id="数组原型链"><a href="#数组原型链" class="headerlink" title="数组原型链"></a>数组原型链</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var arr = [&apos;第一个数&apos;,&apos;第二个数&apos;,&apos;第三个数&apos;]</span><br></pre></td></tr></table></figure>
 <p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/array.png?raw=true" alt="backgroud" title="backgroud"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>现在就对上面的例子中分析得到的结果/关系进行图解，相信这张图可以让你豁然开朗。</p>
