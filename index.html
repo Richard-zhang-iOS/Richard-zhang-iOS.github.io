@@ -351,8 +351,7 @@
 
       
         
-          
-            <p>本文为了解决以下问题：</p>
+          <p>本文为了解决以下问题：</p>
 <ul>
 <li>HTTP 简介</li>
 <li>加密方式</li>
@@ -361,150 +360,13 @@
 <li>中间人攻击</li>
 <li>总结</li>
 </ul>
-<hr>
-<h2 id="HTTP-简介"><a href="#HTTP-简介" class="headerlink" title="HTTP 简介"></a>HTTP 简介</h2><p>HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。它是基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。</p>
-<p>http请求-响应模型如下：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/http_model.png?raw=true" alt="backgroud" title="backgroud"></p>
-<ol>
-<li>1.首先客户机与服务器需要建立连接。只要单击某个超级链接，HTTP的工作开始。</li>
-<li>2.建立连接后，客户机发送一个请求给服务器，请求方式的格式为：统一资源标识符（URL）、协议版本号，后边是MIME信息包括请求修饰符、客户机信息和可能的内容。</li>
-<li>3.服务器接到请求后，给予相应的响应信息，其格式为一个状态行，包括信息的协议版本号、一个成功或错误的代码，后边是MIME信息包括服务器信息、实体信息和可能的内容。</li>
-<li>4.客户端接收服务器所返回的信息通过浏览器显示在用户的显示屏上，然后客户机与服务器断开连接。</li>
-</ol>
-<h2 id="加密方式"><a href="#加密方式" class="headerlink" title="加密方式"></a>加密方式</h2><p>介绍三种HTTPS中使用的加密方式</p>
-<ul>
-<li>对称加密 </li>
-<li>非对称加密</li>
-<li>摘要算法</li>
-</ul>
-<h3 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h3><p>加密和解密都是使用的同一个密钥。对于对称加密来说保持密钥的机密状态是很重要的。在很多情况下，编 / 解码算法都是众所周知的，因此密钥就是唯一保密的东西了。好的加密算法会迫使攻击者试遍每一个可能的密钥，才能破解代码。用暴力去尝试 所有的密钥值称为 <code>枚举攻击(enumeration attack)</code>。</p>
-<p><strong>优点：</strong>速度高，可加密内容较大，用来加密会话过程中的消息</p>
-<p><strong>缺点：</strong>发送者和接收者在互相对话之前，一定要有一个<strong>共享的保密密钥</strong>，如果有 N 个节点， 每个节点都要和其他所有 N-1 个节点进行安全对话，总共大概会有 N2 个保密密钥: 这将是一个<strong>管理噩梦</strong></p>
-<p><strong>常用对称加密：</strong>DES（Data Encryption Standard）、AES（Advanced Encryption Standard）、RC4、IDEA5等</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">明文：ILOVE YOU</span><br><span class="line">密文：KNQXG AQW</span><br><span class="line">(HI J K L M N O P Q R S T U V W)</span><br><span class="line">加密（解密）算法：移位</span><br><span class="line">加密（解密）密钥：2（-2）   </span><br><span class="line">对称加密由于加密和解密密钥关联性很大，所以一般认为只有一个密钥。</span><br></pre></td></tr></table></figure>
-<h3 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h3><p>非对称加密中加密使用的密钥和解密使用的密钥是不相同的，分别称为：公钥、私钥，公钥和算法都是公开的，私钥是保密的。非对称加密算法性能较低，但是安全性超强，由于其加密特性，非对称加密算法能加密的数据长度也是有限的。</p>
-<blockquote>
-<p>非对称加密算法对加密内容的长度有限制，不能超过公钥长度。比如现在常用的公钥长度是 2048 位，意味着待加密内容不能超过 256 个字节。</p>
-</blockquote>
-<p><strong>常用非对称加密：</strong>RSA、DSA、ECDSA、 DH、ECDHE 等</p>
-<p><em>“公钥加密，私钥解密”，这句话是没错，但只说对了一半。公钥和私钥的区分不是以谁加密、谁解密来区分的，是以谁公开、谁不公开为区分的。另外，<strong>公钥和私钥，都可以用来加密和解密</strong>，也就是说，同一对钥匙，公钥加密只能私钥解密，私钥加密只能公钥解密。那为什么我们平常不说“私钥加密”呢？因为公钥是公开的呀！人手一份公钥，私钥加密不跟没加密一个样吗？因此，在实践中，基本不用私钥进行加密，私钥的用途一般是签名。</em></p>
-<h3 id="摘要算法"><a href="#摘要算法" class="headerlink" title="摘要算法"></a>摘要算法</h3><p><strong>特点：</strong></p>
-<ul>
-<li>变长输入，定长输出</li>
-<li>摘要算法是单向、不可逆的</li>
-<li>输入相同，输出相同，输入不同，输出不同</li>
-<li>好的摘要算法，没有人能从中找到“碰撞”，虽然“碰撞”是肯定存在的。即无法找到两条不同消息，但是它们的摘要相同</li>
-</ul>
-<p><strong>用途：</strong>消息摘要保证了消息的完整性</p>
-<p><strong>常见的摘要算法有：</strong></p>
-<ul>
-<li>编解码算法（Hex 编码、Base64 ）</li>
-<li>HASH 算法（MD5、SHA1、SHA256）</li>
-<li>MAC 算法（消息认证码算法，基于HASH算法之上，增加了密钥的支持以提高安全性）</li>
-</ul>
-<h2 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a>数字证书</h2><p>本章节介绍一下内容</p>
-<ul>
-<li>为什么要有数字证书</li>
-<li>数字证书包含的内容</li>
-<li>如何进行数字签名</li>
-<li>颁发证书的过程</li>
-<li>以及证书验证过程</li>
-</ul>
-<hr>
-<h3 id="证书作用"><a href="#证书作用" class="headerlink" title="证书作用"></a>证书作用</h3><p>对于请求方来说，它怎么能确定它所得到的公钥一定是从目标主机那里发布的，而且没有被篡改过呢？亦或者请求的目标主机本本身就从事窃取用户信息的不正当行为呢？这时候，我们需要有一个权威的值得信赖的第三方机构(一般是由政府审核并授权的机构)来统一对外发放主机机构的公钥，只要请求方这种机构获取公钥，就避免了上述问题的发生。</p>
-<h3 id="证书内容"><a href="#证书内容" class="headerlink" title="证书内容"></a>证书内容</h3><ul>
-<li>证书颁发机构的名称</li>
-<li>证书本身的数字签名</li>
-<li>证书持有者公钥</li>
-<li>证书签名用到的Hash算法</li>
-</ul>
-<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3><p>数字签名技术就是对“非对称密钥加解密”和“数字摘要“两项技术的应用，它将摘要信息用发送者的私钥加密，与原文一起传送给接收者。接收者只有用发送者的公钥才能解密被加密的摘要信息，然后用HASH函数对收到的原文产生一个摘要信息，与解密的摘要信息对比。如果相同，则说明收到的信息是完整的，在传输过程中没有被修改，否则说明信息被修改过，因此数字签名能够验证信息的完整性。<br>数字签名的过程如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">明文 --&gt; hash运算 --&gt; 摘要 --&gt; 私钥加密 --&gt; 数字签名1</span><br></pre></td></tr></table></figure>
-<p>数字签名有两种功效：</p>
-<p>一、能确定消息确实是由发送方签名并发出来的，因为别人假冒不了发送方的签名。<br>二、数字签名能确定消息的完整性。</p>
-<blockquote>
-<p><strong>注意：</strong><br>数字签名只能验证数据的完整性，数据本身是否加密不属于数字签名的控制范围</p>
-</blockquote>
-<h3 id="证书颁发过程"><a href="#证书颁发过程" class="headerlink" title="证书颁发过程"></a>证书颁发过程</h3><p>用户首先产生自己的密钥对，并将公共密钥及部分个人身份信息传送给认证中心。认证中心在核实身份后，将执行一些必要的步骤，以确信请求确实由用户发送而来，然后，认证中心将发给用户一个数字证书，该证书内包含用户的个人信息和他的公钥信息，同时还附有认证中心的签名信息(根证书私钥签名,采用上面数字签名的方式)。用户就可以使用自己的数字证书进行相关的各种活动。数字证书由独立的证书发行机构发布，数字证书各不相同，每种证书可提供不同级别的可信度。</p>
-<h3 id="消息认证"><a href="#消息认证" class="headerlink" title="消息认证"></a>消息认证</h3><p><strong>浏览器默认都会内置CA根证书，其中根证书包含了CA的公钥</strong></p>
-<ol>
-<li>证书颁发的机构是伪造的：浏览器不认识，直接认为是危险证书</li>
-<li>证书颁发的机构是确实存在的，于是根据CA名，找到对应内置的CA根证书、CA的公钥。用CA的公钥，对伪造的证书的摘要进行解密，发现解不了，认为是危险证书。</li>
-<li>对于篡改的证书，使用CA的公钥对数字签名进行解密得到摘要A，然后再根据签名的Hash算法计算出证书的摘要B，对比A与B，若相等则正常，若不相等则是被篡改过的。</li>
-<li>证书可在其过期前被吊销，通常情况是该证书的私钥已经失密。较新的浏览器如Chrome、Firefox、Opera和Internet Explorer都实现了在线证书状态协议（OCSP）以排除这种情形：浏览器将网站提供的证书的序列号通过OCSP发送给证书颁发机构，后者会告诉浏览器证书是否还是有效的。</li>
-</ol>
-<blockquote>
-<p>1、2点是对伪造证书进行的，3是对于篡改后的证书验证，4是对于过期失效的验证。</p>
-</blockquote>
-<h2 id="HTTPS介绍"><a href="#HTTPS介绍" class="headerlink" title="HTTPS介绍"></a>HTTPS介绍</h2><p>本章节介绍了一下几个内容</p>
-<ul>
-<li>HTTPS是什么</li>
-<li>HTTPS的通讯过程</li>
-<li>HTTPS为什么选择这种方式</li>
-</ul>
-<p><strong>HTTPS</strong>：超文本传输安全协议（英语：Hypertext Transfer Protocol Secure，缩写：HTTPS，常称为HTTP over TLS，HTTP over SSL或HTTP Secure）是一种通过计算机网络进行安全通信的传输协议。HTTPS经由HTTP进行通信，但利用SSL/TLS来加密数据包。HTTPS开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完整性。</p>
-<h3 id="HTTPS的通讯过程"><a href="#HTTPS的通讯过程" class="headerlink" title="HTTPS的通讯过程"></a>HTTPS的通讯过程</h3><p>在解释发展过程之前先给出<strong>HTTPS的通讯过程</strong></p>
-<p>假定客户端叫做爱丽丝，服务器叫做鲍勃，整个握手过程可以用下图说明。</p>
-<p><img src="https://segmentfault.com/img/remote/1460000011675430?w=760&amp;h=773" alt="image"></p>
-<p>握手阶段分成五步：</p>
-<ol>
-<li>爱丽丝给出协议版本号、一个客户端生成的 <code>随机数（Client random）</code>，以及客户端支持的加密方法。</li>
-<li>鲍勃确认双方使用的加密方法，并给出数字证书、以及一个 <code>服务器生成的随机数（Server random）</code>。</li>
-<li>爱丽丝确认数字证书有效，然后生成一个新的 <code>随机数（Premaster secret）</code>，并使用数字证书中的公钥，加密这个随机数，发给鲍勃。</li>
-<li>鲍勃使用自己的私钥，获取爱丽丝发来的随机数（即<code>Premaster secret</code>）。</li>
-<li>爱丽丝和鲍勃根据约定的加密方法，使用前面的三个随机数，生成 <code>对话密钥（session key）</code>，用来加密接下来的整个对话过程。</li>
-</ol>
-<p>解释这个过程中的几个问题：</p>
-<ol>
-<li><p>为什么又要用非对称加密，又要用对称加密，只使用一个不可以么？</p>
-<blockquote>
-<blockquote>
-<p>不能只是用对称加密，因为对称加密，两个使用的秘钥是一致的，有一端的秘钥泄露了，两端的通信就不再安全了，尤其是客户端的对称秘钥非常容易泄露，拿到秘钥后，整个系统就不安全了。</p>
-<p>也不只用非对称加密，主要是因为性能，非对称加密相对于对称加密，计算时间要长非常多，对于性能要求很高的场景，会明显降低性能。<a href="http://blog.csdn.net/yore_/article/details/52733994" target="_blank" rel="noopener">RSA算法和AES算法性能测试</a></p>
-<p>所以设计者结合了两种方案。两端通过非对称加密协商秘钥，攻击者因为拿不到私钥，是无法解开通信秘钥的。一旦协商成功，通过对称加密又解决了性能问题。</p>
-</blockquote>
-</blockquote>
-</li>
-<li><p>为什么使用三个随机数</p>
-<blockquote>
-<blockquote>
-<p>还是为了进一步加强安全，客户端或者服务端生成的随机数可能是伪随机的，有可能被攻击者猜出，但是如果三个伪随机的数一起使用就大大加强了随机性，这样攻击者就很难破解了。</p>
-</blockquote>
-</blockquote>
-</li>
-<li><p>为什么最后要做hash验证</p>
-<blockquote>
-<blockquote>
-<p>为了保证两端通信中的数据不会做篡改，由于HASH算法，可以保证唯一性，所以如果中间消息被人篡改，就可以断开链接。</p>
-</blockquote>
-</blockquote>
-</li>
-</ol>
-<h3 id="HTTPS衍变过程"><a href="#HTTPS衍变过程" class="headerlink" title="HTTPS衍变过程"></a>HTTPS衍变过程</h3><p>上面我们知道了HTTPS的通话过程，下面我们来分析下为什么要这样进行通话，假如我们只使用对称加密，会产生上面问题？</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https1.png?raw=true"></p>
-<p>这个过程中我们遇到的问题是传输密钥没法保证安全，所以我们在这个基础上引入了非对称加密来确保传输密钥的过程是安全的。看下图：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https2.png?raw=true"></p>
-<p>这个过程我们遇到问题是，如果有攻击者来模拟客户端或者服务器，我们没法察觉，案例如下：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https3.png?raw=true"></p>
-<p>为了解决上面的问题，我们在通讯过程中假如数字证书的机制（见上文），只有受信任的双方才能通信，见下图：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https.png?raw=true"></p>
-<p>自此我们得出了整个HTTPS的通话过程。</p>
-<h2 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a>中间人攻击</h2><p>中间人（MITM）攻击是一种攻击类型，其中攻击者将它自己放到两方之间，通常是客户端和服务端通信线路的中间。这可以通过破坏原始频道之后拦截一方的消息并将它们转发（有时会有改变）给另一方来实现。</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/MIM.png?raw=true" alt="backgroud" title="backgroud"></p>
-<h3 id="SSL证书欺骗攻击"><a href="#SSL证书欺骗攻击" class="headerlink" title="SSL证书欺骗攻击"></a>SSL证书欺骗攻击</h3><p>首先通过ARP欺骗、DNS劫持甚至网关劫持等等，将客户端的访问重定向到攻击者的机器，让客户端机器与攻击者机器建立HTTPS连接（使用伪造证书），而攻击者机器再跟服务端连接。</p>
-<p>这样用户在客户端看到的是相同域名的网站，但浏览器会提示证书不可信，用户不点击继续浏览就能避免被劫持的。所以这是最简单的攻击方式，也是最容易识别的攻击方式。见下图：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/untrust.png?raw=true" alt="backgroud" title="backgroud"></p>
-<h3 id="SSL剥离攻击"><a href="#SSL剥离攻击" class="headerlink" title="SSL剥离攻击"></a>SSL剥离攻击</h3><p>该攻击方式主要是利用用户并不会每次都直接在浏览器上输入<a href="https://xxx.xxx.com来访问网站，或者有些网站并非全网HTTPS，而是只在需要进行敏感数据传输时才使用HTTPS的漏洞。" target="_blank" rel="noopener">https://xxx.xxx.com来访问网站，或者有些网站并非全网HTTPS，而是只在需要进行敏感数据传输时才使用HTTPS的漏洞。</a></p>
-<p>中间人攻击者在劫持了客户端与服务端的HTTP会话后，将HTTP页面里面所有的https://超链接都换成http://，用户在点击相应的链接时，是使用HTTP协议来进行访问。</p>
-<p>这样，就算服务器对相应的URL只支持HTTPS链接，但中间人一样可以和服务建立HTTPS连接之后，将数据使用HTTP协议转发给客户端，实现会话劫持。</p>
-<p>我们开发过程中使用抓包工具，就是使用这种方式，见下图：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https5.png?raw=true" alt="backgroud" title="backgroud"></p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>HTTP+加密+认证+完整性保护 = HTTPS.</strong></p>
-<p>文章所涉及的图片来自于网络，如遇版权问题，请联系我删除。</p>
-<p><strong>参考文章</strong></p>
-<p><a href="https://github.com/youngwind/blog/issues/108">https://github.com/youngwind/blog/issues/108</a></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/08/19/网络安全/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

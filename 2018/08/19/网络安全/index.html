@@ -79,27 +79,27 @@
 
 
 
-<meta name="description" content="本文为了解决以下问题：  HTTP 简介 加密方式 签名及认证 HTTPS介绍 中间人攻击 总结   HTTP 简介HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。它是基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。 htt">
+<meta name="description" content="本文为了解决以下问题：  HTTP 简介 加密方式 签名及认证 HTTPS介绍 中间人攻击 总结">
 <meta name="keywords" content="HTTPS">
 <meta property="og:type" content="article">
 <meta property="og:title" content="网络安全初探知">
 <meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/19/网络安全/index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
-<meta property="og:description" content="本文为了解决以下问题：  HTTP 简介 加密方式 签名及认证 HTTPS介绍 中间人攻击 总结   HTTP 简介HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。它是基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。 htt">
+<meta property="og:description" content="本文为了解决以下问题：  HTTP 简介 加密方式 签名及认证 HTTPS介绍 中间人攻击 总结">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/http_model.png?raw=true">
-<meta property="og:image" content="https://segmentfault.com/img/remote/1460000011675430?w=760&h=773">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https1.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https2.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https3.png?raw=true">
-<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https.png?raw=true">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https4.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/MIM.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/untrust.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https5.png?raw=true">
-<meta property="og:updated_time" content="2018-08-19T10:45:48.458Z">
+<meta property="og:updated_time" content="2018-08-19T10:51:04.263Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络安全初探知">
-<meta name="twitter:description" content="本文为了解决以下问题：  HTTP 简介 加密方式 签名及认证 HTTPS介绍 中间人攻击 总结   HTTP 简介HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。它是基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。 htt">
+<meta name="twitter:description" content="本文为了解决以下问题：  HTTP 简介 加密方式 签名及认证 HTTPS介绍 中间人攻击 总结">
 <meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/http_model.png?raw=true">
 
 
@@ -371,15 +371,15 @@
 <li>中间人攻击</li>
 <li>总结</li>
 </ul>
-<hr>
+<a id="more"></a>
 <h2 id="HTTP-简介"><a href="#HTTP-简介" class="headerlink" title="HTTP 简介"></a>HTTP 简介</h2><p>HTTP协议是Hyper Text Transfer Protocol（超文本传输协议）的缩写,是用于从万维网（WWW:World Wide Web ）服务器传输超文本到本地浏览器的传送协议。它是基于TCP/IP通信协议来传递数据（HTML 文件, 图片文件, 查询结果等）。</p>
 <p>http请求-响应模型如下：</p>
 <p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/http_model.png?raw=true" alt="backgroud" title="backgroud"></p>
 <ol>
-<li>1.首先客户机与服务器需要建立连接。只要单击某个超级链接，HTTP的工作开始。</li>
-<li>2.建立连接后，客户机发送一个请求给服务器，请求方式的格式为：统一资源标识符（URL）、协议版本号，后边是MIME信息包括请求修饰符、客户机信息和可能的内容。</li>
-<li>3.服务器接到请求后，给予相应的响应信息，其格式为一个状态行，包括信息的协议版本号、一个成功或错误的代码，后边是MIME信息包括服务器信息、实体信息和可能的内容。</li>
-<li>4.客户端接收服务器所返回的信息通过浏览器显示在用户的显示屏上，然后客户机与服务器断开连接。</li>
+<li>首先客户机与服务器需要建立连接。只要单击某个超级链接，HTTP的工作开始。</li>
+<li>建立连接后，客户机发送一个请求给服务器，请求方式的格式为：统一资源标识符（URL）、协议版本号，后边是MIME信息包括请求修饰符、客户机信息和可能的内容。</li>
+<li>服务器接到请求后，给予相应的响应信息，其格式为一个状态行，包括信息的协议版本号、一个成功或错误的代码，后边是MIME信息包括服务器信息、实体信息和可能的内容。</li>
+<li>客户端接收服务器所返回的信息通过浏览器显示在用户的显示屏上，然后客户机与服务器断开连接。</li>
 </ol>
 <h2 id="加密方式"><a href="#加密方式" class="headerlink" title="加密方式"></a>加密方式</h2><p>介绍三种HTTPS中使用的加密方式</p>
 <ul>
@@ -420,7 +420,6 @@
 <li>颁发证书的过程</li>
 <li>以及证书验证过程</li>
 </ul>
-<hr>
 <h3 id="证书作用"><a href="#证书作用" class="headerlink" title="证书作用"></a>证书作用</h3><p>对于请求方来说，它怎么能确定它所得到的公钥一定是从目标主机那里发布的，而且没有被篡改过呢？亦或者请求的目标主机本本身就从事窃取用户信息的不正当行为呢？这时候，我们需要有一个权威的值得信赖的第三方机构(一般是由政府审核并授权的机构)来统一对外发放主机机构的公钥，只要请求方这种机构获取公钥，就避免了上述问题的发生。</p>
 <h3 id="证书内容"><a href="#证书内容" class="headerlink" title="证书内容"></a>证书内容</h3><ul>
 <li>证书颁发机构的名称</li>
@@ -455,7 +454,7 @@
 <p><strong>HTTPS</strong>：超文本传输安全协议（英语：Hypertext Transfer Protocol Secure，缩写：HTTPS，常称为HTTP over TLS，HTTP over SSL或HTTP Secure）是一种通过计算机网络进行安全通信的传输协议。HTTPS经由HTTP进行通信，但利用SSL/TLS来加密数据包。HTTPS开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完整性。</p>
 <h3 id="HTTPS的通讯过程"><a href="#HTTPS的通讯过程" class="headerlink" title="HTTPS的通讯过程"></a>HTTPS的通讯过程</h3><p>在解释发展过程之前先给出<strong>HTTPS的通讯过程</strong></p>
 <p>假定客户端叫做爱丽丝，服务器叫做鲍勃，整个握手过程可以用下图说明。</p>
-<p><img src="https://segmentfault.com/img/remote/1460000011675430?w=760&amp;h=773" alt="image"></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https.png?raw=true"></p>
 <p>握手阶段分成五步：</p>
 <ol>
 <li>爱丽丝给出协议版本号、一个客户端生成的 <code>随机数（Client random）</code>，以及客户端支持的加密方法。</li>
@@ -497,7 +496,7 @@
 <p>这个过程我们遇到问题是，如果有攻击者来模拟客户端或者服务器，我们没法察觉，案例如下：</p>
 <p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https3.png?raw=true"></p>
 <p>为了解决上面的问题，我们在通讯过程中假如数字证书的机制（见上文），只有受信任的双方才能通信，见下图：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https.png?raw=true"></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https4.png?raw=true"></p>
 <p>自此我们得出了整个HTTPS的通话过程。</p>
 <h2 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a>中间人攻击</h2><p>中间人（MITM）攻击是一种攻击类型，其中攻击者将它自己放到两方之间，通常是客户端和服务端通信线路的中间。这可以通过破坏原始频道之后拦截一方的消息并将它们转发（有时会有改变）给另一方来实现。</p>
 <p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/MIM.png?raw=true" alt="backgroud" title="backgroud"></p>
