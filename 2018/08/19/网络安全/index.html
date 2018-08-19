@@ -96,7 +96,7 @@
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/MIM.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/untrust.png?raw=true">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https5.png?raw=true">
-<meta property="og:updated_time" content="2018-08-19T10:53:30.930Z">
+<meta property="og:updated_time" content="2018-08-19T12:34:48.506Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="网络安全初探知">
 <meta name="twitter:description" content="本文为了解决以下问题：  HTTP 简介 加密方式 签名及认证 HTTPS介绍 中间人攻击 总结">
@@ -503,11 +503,11 @@
 <h3 id="SSL证书欺骗攻击"><a href="#SSL证书欺骗攻击" class="headerlink" title="SSL证书欺骗攻击"></a>SSL证书欺骗攻击</h3><p>首先通过ARP欺骗、DNS劫持甚至网关劫持等等，将客户端的访问重定向到攻击者的机器，让客户端机器与攻击者机器建立HTTPS连接（使用伪造证书），而攻击者机器再跟服务端连接。</p>
 <p>这样用户在客户端看到的是相同域名的网站，但浏览器会提示证书不可信，用户不点击继续浏览就能避免被劫持的。所以这是最简单的攻击方式，也是最容易识别的攻击方式。见下图：</p>
 <p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/untrust.png?raw=true" alt="backgroud" title="backgroud"></p>
+<p>我们开发过程中使用<strong>抓包工具</strong>，就是使用这种方式，区别是我们的客户端提前安装信任了该代理工具。见下图：</p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https5.png?raw=true" alt="backgroud" title="backgroud"></p>
 <h3 id="SSL剥离攻击"><a href="#SSL剥离攻击" class="headerlink" title="SSL剥离攻击"></a>SSL剥离攻击</h3><p>该攻击方式主要是利用用户并不会每次都直接在浏览器上输入https:xxx.xxx.com来访问网站，或者有些网站并非全网HTTPS，而是只在需要进行敏感数据传输时才使用HTTPS的漏洞。</p>
 <p>中间人攻击者在劫持了客户端与服务端的HTTP会话后，将HTTP页面里面所有的https://超链接都换成http://，用户在点击相应的链接时，是使用HTTP协议来进行访问。</p>
 <p>这样，就算服务器对相应的URL只支持HTTPS链接，但中间人一样可以和服务建立HTTPS连接之后，将数据使用HTTP协议转发给客户端，实现会话劫持。</p>
-<p>我们开发过程中使用抓包工具，就是使用这种方式，见下图：</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/https5.png?raw=true" alt="backgroud" title="backgroud"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>HTTP+加密+认证+完整性保护 = HTTPS.</strong></p>
 <p>文章所涉及的图片来自于网络，如遇版权问题，请联系我删除。</p>
 <p><strong>参考文章</strong></p>
