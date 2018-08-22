@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="本文主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)">
+<meta name="description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)  什么是事件流 定义：1.事件流描述的是从页面中接收事件的顺序,也可理解为事件在页面中传播的顺序。 2.事件就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。 3.事件处理程序响应某个事件的函数就叫事件处理程序(或事件侦听器)。  JS事件流最">
 <meta name="keywords" content="Event">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Javascript事件流总结">
-<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/08/JavaScript事件流总结/index.html">
+<meta property="og:title" content="Javascript事件流">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/22/Javascipt事件流/index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
-<meta property="og:description" content="本文主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)">
+<meta property="og:description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)  什么是事件流 定义：1.事件流描述的是从页面中接收事件的顺序,也可理解为事件在页面中传播的顺序。 2.事件就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。 3.事件处理程序响应某个事件的函数就叫事件处理程序(或事件侦听器)。  JS事件流最">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://images0.cnblogs.com/blog/707050/201507/181443001888733.png">
-<meta property="og:updated_time" content="2018-08-22T08:16:37.930Z">
+<meta property="og:updated_time" content="2018-08-22T08:20:08.994Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Javascript事件流总结">
-<meta name="twitter:description" content="本文主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)">
+<meta name="twitter:title" content="Javascript事件流">
+<meta name="twitter:description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)  什么是事件流 定义：1.事件流描述的是从页面中接收事件的顺序,也可理解为事件在页面中传播的顺序。 2.事件就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。 3.事件处理程序响应某个事件的函数就叫事件处理程序(或事件侦听器)。  JS事件流最">
 <meta name="twitter:image" content="https://images0.cnblogs.com/blog/707050/201507/181443001888733.png">
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/08/JavaScript事件流总结/"/>
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/22/Javascipt事件流/"/>
 
 
 
 
 
-  <title>Javascript事件流总结 | Richard-zhang-iOS的博客</title>
+  <title>Javascript事件流 | Richard-zhang-iOS的博客</title>
   
 
 
@@ -265,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/08/JavaScript事件流总结/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/22/Javascipt事件流/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Richard-zhang-iOS">
@@ -282,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Javascript事件流总结</h1>
+          <h1 class="post-title" itemprop="name headline">Javascript事件流</h1>
         
 
         <div class="post-meta">
@@ -294,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-08T21:18:33+08:00">
-                2018-08-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-22T16:18:17+08:00">
+                2018-08-22
               </time>
             
 
@@ -354,29 +354,23 @@
       
 
       
-        <p>本文主要包括以下四个方面：</p>
+        <p>本章节主要包括以下四个方面：</p>
 <ul>
 <li>什么是事件流</li>
 <li>事件冒泡</li>
 <li>事件捕获</li>
 <li>W3C事件流(DOM事件流)</li>
 </ul>
-<a id="more"></a>
-<h2 id="什么是事件流"><a href="#什么是事件流" class="headerlink" title="什么是事件流"></a>什么是事件流</h2><blockquote>
-<p><strong>定义</strong>：<br>1.<code>事件流</code>描述的是从页面中接收<strong>事件</strong>的顺序,也可理解为<strong>事件</strong>在页面中传播的顺序。<br>2.<code>事件</code>就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。<br>3.<code>事件处理程序</code>响应某个事件的<strong>函数</strong>就叫事件处理程序(或事件侦听器)。</p>
+<h3 id="什么是事件流"><a href="#什么是事件流" class="headerlink" title="什么是事件流"></a>什么是事件流</h3><blockquote>
+<p><strong>定义</strong>：<br>1.<code>事件流</code>描述的是从页面中接收<strong>事件</strong>的顺序,也可理解为<strong>事件</strong>在页面中传播的顺序。</p>
+<p>2.<code>事件</code>就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。</p>
+<p>3.<code>事件处理程序</code>响应某个事件的<strong>函数</strong>就叫事件处理程序(或事件侦听器)。</p>
 </blockquote>
 <p>JS事件流最早要从IE和网景公司的浏览器大战说起，IE提出的是冒泡流，而网景提出的是捕获流，后来在W3C组织的统一之下，JS支持了冒泡流和捕获流，但是目前低版本的IE浏览器还是只能支持冒泡流(IE6,IE7,IE8均只支持冒泡流)，所以为了能够兼容更多的浏览器，建议大家使用冒泡流。</p>
-<p>本文主要包括以下四个方面：</p>
-<ul>
-<li>什么是事件流</li>
-<li>事件冒泡</li>
-<li>事件捕获</li>
-<li>W3C事件流(DOM事件流)</li>
-</ul>
-<h2 id="事件冒泡"><a href="#事件冒泡" class="headerlink" title="事件冒泡"></a>事件冒泡</h2><p>微软提出了名为事件冒泡的事件流。事件冒泡可以形象地比喻为把一颗石头投入水中，泡泡会一直从水底冒出水面。也就是说，事件会从最内层的元素开始发生，一直向上传播，直到document对象，事件的传递应该是：<strong>p -&gt; div -&gt; body -&gt; html -&gt; document</strong>。</p>
-<h2 id="事件捕获"><a href="#事件捕获" class="headerlink" title="事件捕获"></a>事件捕获</h2><p>网景提出另一种事件流名为事件捕获与事件冒泡相反，事件会从最外层开始发生，直到最具体的元素。事件捕获顺序应该是：<strong>document -&gt; html -&gt; body -&gt; div -&gt; p</strong></p>
-<h2 id="W3C事件流-DOM事件流"><a href="#W3C事件流-DOM事件流" class="headerlink" title="W3C事件流(DOM事件流)"></a>W3C事件流(DOM事件流)</h2><p>当一个DOM事件被触发的时候，他并不是只在它的起源对象上触发一次，而是会经历三个不同的阶段。简而言之：事件一开始从文档的根节点流向目标对象(捕获阶段)，然后在目标对向上被触发(目标阶段)，之后再回溯到文档的根节点(冒泡阶段)如图所示（图片来自W3C）：</p>
-<p><a href="http://images0.cnblogs.com/blog/707050/201507/181442594707820.png" target="_blank" rel="noopener"><img src="https://images0.cnblogs.com/blog/707050/201507/181443001888733.png" alt="image"></a></p>
+<h3 id="事件冒泡"><a href="#事件冒泡" class="headerlink" title="事件冒泡"></a>事件冒泡</h3><p>微软提出了名为事件冒泡的事件流。事件冒泡可以形象地比喻为把一颗石头投入水中，泡泡会一直从水底冒出水面。也就是说，事件会从最内层的元素开始发生，一直向上传播，直到document对象，事件的传递应该是：<strong>p -&gt; div -&gt; body -&gt; html -&gt; document</strong>。</p>
+<h3 id="事件捕获"><a href="#事件捕获" class="headerlink" title="事件捕获"></a>事件捕获</h3><p>网景提出另一种事件流名为事件捕获与事件冒泡相反，事件会从最外层开始发生，直到最具体的元素。事件捕获顺序应该是：<strong>document -&gt; html -&gt; body -&gt; div -&gt; p</strong></p>
+<h3 id="W3C事件流-DOM事件流"><a href="#W3C事件流-DOM事件流" class="headerlink" title="W3C事件流(DOM事件流)"></a>W3C事件流(DOM事件流)</h3><p>当一个DOM事件被触发的时候，他并不是只在它的起源对象上触发一次，而是会经历三个不同的阶段。简而言之：事件一开始从文档的根节点流向目标对象(捕获阶段)，然后在目标对向上被触发(目标阶段)，之后再回溯到文档的根节点(冒泡阶段)如图所示（图片来自W3C）：</p>
+<p><a href="http://gitlab.qiyi.domain/zhangyanqiang/Technology-blog/blob/master/res/event.png" target="_blank" rel="noopener"><img src="https://images0.cnblogs.com/blog/707050/201507/181443001888733.png" alt="image"></a></p>
 <p><strong>事件捕获阶段(Capture Phase)</strong></p>
 <p>事件从文档的根节点出发，随着DOM树的结构向事件的目标节点流去。途中经过各个层次的DOM节点，并在各节点上触发捕获事件，直到到达时间的目标节点。捕获阶段的主要任务是简历传播路径，在冒泡阶段，时间会通过这个路径回溯到文档根节点。</p>
 <p>例如，通过下面的这个函数来给节点设置监听，可以通过将;设置成true来为事件的捕获阶段添加监听回调函数。</p>
@@ -390,60 +384,8 @@
 <p><strong>冒泡阶段(Bubble Phase)</strong></p>
 <p>事件在目标事件上触发后，并不在这个元素上终止。它会随着DOM树一层层向上冒泡，直到到达最外层的根节点，一直向上传播，直到document对象。也就是说，同一事件会一次在目标节点的父节点，父节点的父节点…直到最外层的节点上触发。</p>
 <p>绝大多数事件是会冒泡的，但并非所有的。</p>
-<p>示例代码</p>
-<p>`&lt;!DOCTYPE html&gt;</p>
-<p><head><br>    <meta charset="utf-8"><br>    <style></p>
-<pre><code>#wrap {
-    width: 200px;
-    height: 200px;
-    background: orange;
-}
-#outer {
-    position: relative;
-    top: 50px;
-    left: 50px;
-    width: 100px;
-    height: 100px;
-    background: #eeddff;
-}
-#inner {
-    position: relative;
-    top: 25px;
-    left:25px;
-    width: 50px;
-    height: 50px;
-    background: #44ddff;
-}
-&lt;/style&gt;
-</code></pre><p></head></p>
-<body><br>    <div id="wrap"><br>        <div id="outer"><br>            <div id="inner"></div><br>        </div><br>    </div><br></body>
-
-<script>
-    var wrap = document.getElementById('wrap');
-    var outet = document.getElementById('outer');
-    var inner = document.getElementById('inner');
-
-    wrap.addEventListener('click',function(){
-        alert('789');
-    },false);
-    outer.addEventListener('click',function(){
-        alert('456');
-    },false);
-    inner.addEventListener('click',function(){
-        alert('123');
-    },false);
-    wrap.addEventListener('click',function(){
-        alert('wrap');
-    },true);
-    outer.addEventListener('click',function(){
-        alert('outer');
-    },true);
-    inner.addEventListener('click',function(){
-        alert('inner');
-    },true);
-</script>
-
-<p></html>`</p>
+<p><strong>示例代码</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">	&lt;meta charset=&apos;utf-8&apos; /&gt;</span><br><span class="line">	&lt;style&gt;</span><br><span class="line">	#wrap &#123;</span><br><span class="line">		width: 200px;</span><br><span class="line">		height: 200px;</span><br><span class="line">		background: orange;</span><br><span class="line">	&#125;</span><br><span class="line">	#outer &#123;</span><br><span class="line">		position: relative;</span><br><span class="line">		top: 50px;</span><br><span class="line">		left: 50px;</span><br><span class="line">		width: 100px;</span><br><span class="line">		height: 100px;</span><br><span class="line">		background: #eeddff;</span><br><span class="line">	&#125;</span><br><span class="line">	#inner &#123;</span><br><span class="line">		position: relative;</span><br><span class="line">		top: 25px;</span><br><span class="line">		left:25px;</span><br><span class="line">		width: 50px;</span><br><span class="line">		height: 50px;</span><br><span class="line">		background: #44ddff;</span><br><span class="line">	&#125;</span><br><span class="line">    &lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;    </span><br><span class="line">	&lt;div id=&quot;wrap&quot;&gt;</span><br><span class="line">		&lt;div id=&quot;outer&quot;&gt;</span><br><span class="line">			&lt;div id=&quot;inner&quot;&gt;&lt;/div&gt;</span><br><span class="line">		&lt;/div&gt;</span><br><span class="line">	&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">	var wrap = document.getElementById(&apos;wrap&apos;);</span><br><span class="line">	var outet = document.getElementById(&apos;outer&apos;);</span><br><span class="line">	var inner = document.getElementById(&apos;inner&apos;);</span><br><span class="line"></span><br><span class="line">	wrap.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">		alert(&apos;789&apos;);</span><br><span class="line">	&#125;,false);</span><br><span class="line">	outer.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">		alert(&apos;456&apos;);</span><br><span class="line">	&#125;,false);</span><br><span class="line">	inner.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">		alert(&apos;123&apos;);</span><br><span class="line">	&#125;,false);</span><br><span class="line">	wrap.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">		alert(&apos;wrap&apos;);</span><br><span class="line">	&#125;,true);</span><br><span class="line">	outer.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">		alert(&apos;outer&apos;);</span><br><span class="line">	&#125;,true);</span><br><span class="line">	inner.addEventListener(&apos;click&apos;,function()&#123;</span><br><span class="line">		alert(&apos;inner&apos;);</span><br><span class="line">	&#125;,true);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
 <p><strong>结论:</strong>当点击页面中心浅蓝色部分的时候，先从最不具体的节点捕获事件，先弹出wrap,接着弹出outer。接着处于目标阶段，先弹出123，再弹出inner。紧接着，事件处于冒泡阶段，先弹出456，再弹出789。因此我们可以得出结论，当容器元素及嵌套元素，即在<code>捕获阶段</code>又在<code>冒泡阶段</code>调用事件处理程序时：事件按DOM事件流的顺序执行事件处理程序，<strong>当事件处于目标阶段时</strong>，事件调用顺序决定于绑定事件的书写顺序。</p>
 <p><strong>提示</strong>:</p>
 <ul>
@@ -452,7 +394,8 @@
 <li>尽管“DOM2级事件”标准规范明确规定事件捕获阶段不会涉及事件目标，但是在IE9、Safari、Chrome、Firefox和Opera9.5及更高版本都会在捕获阶段触发事件对象上的事件。结果，就是有两次机会在目标对象上面操作事件。</li>
 <li>并非所有的事件都会经过冒泡阶段 。所有的事件都要经过捕获阶段和处于目标阶段，但是有些事件会跳过冒泡阶段：如，获得输入焦点的focus事件和失去输入焦点的blur事件。</li>
 </ul>
-</style></head></p>
+<p>## </p>
+
       
     </div>
     
@@ -482,8 +425,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/27/runtime机制/" rel="next" title="iOS Runtime 复习整理">
-                <i class="fa fa-chevron-left"></i> iOS Runtime 复习整理
+              <a href="/2018/08/21/前端跨域解决方案/" rel="next" title="前端跨域方案总结">
+                <i class="fa fa-chevron-left"></i> 前端跨域方案总结
               </a>
             
           </div>
@@ -491,10 +434,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/08/15/JavaScript原型/" rel="prev" title="Javascript原型总结">
-                Javascript原型总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -646,7 +585,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是事件流"><span class="nav-number">1.</span> <span class="nav-text">什么是事件流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件冒泡"><span class="nav-number">2.</span> <span class="nav-text">事件冒泡</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事件捕获"><span class="nav-number">3.</span> <span class="nav-text">事件捕获</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#W3C事件流-DOM事件流"><span class="nav-number">4.</span> <span class="nav-text">W3C事件流(DOM事件流)</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是事件流"><span class="nav-number">1.</span> <span class="nav-text">什么是事件流</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件冒泡"><span class="nav-number">2.</span> <span class="nav-text">事件冒泡</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件捕获"><span class="nav-number">3.</span> <span class="nav-text">事件捕获</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#W3C事件流-DOM事件流"><span class="nav-number">4.</span> <span class="nav-text">W3C事件流(DOM事件流)</span></a></li></ol></div>
             
 
           </div>
