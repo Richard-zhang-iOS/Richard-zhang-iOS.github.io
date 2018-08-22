@@ -79,20 +79,20 @@
 
 
 
-<meta name="description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)">
+<meta name="description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)  什么是事件流 定义：1.事件流描述的是从页面中接收事件的顺序,也可理解为事件在页面中传播的顺序。 2.事件就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。 3.事件处理程序响应某个事件的函数就叫事件处理程序(或事件侦听器)。  JS事件流最">
 <meta name="keywords" content="Event">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Javascript事件流">
 <meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/08/22/Javascipt事件流/index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
-<meta property="og:description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)">
+<meta property="og:description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)  什么是事件流 定义：1.事件流描述的是从页面中接收事件的顺序,也可理解为事件在页面中传播的顺序。 2.事件就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。 3.事件处理程序响应某个事件的函数就叫事件处理程序(或事件侦听器)。  JS事件流最">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://images0.cnblogs.com/blog/707050/201507/181443001888733.png">
-<meta property="og:updated_time" content="2018-08-22T08:23:27.367Z">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/event.png?raw=true">
+<meta property="og:updated_time" content="2018-08-22T08:27:01.544Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Javascript事件流">
-<meta name="twitter:description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)">
-<meta name="twitter:image" content="https://images0.cnblogs.com/blog/707050/201507/181443001888733.png">
+<meta name="twitter:description" content="本章节主要包括以下四个方面：  什么是事件流 事件冒泡 事件捕获 W3C事件流(DOM事件流)  什么是事件流 定义：1.事件流描述的是从页面中接收事件的顺序,也可理解为事件在页面中传播的顺序。 2.事件就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。 3.事件处理程序响应某个事件的函数就叫事件处理程序(或事件侦听器)。  JS事件流最">
+<meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/event.png?raw=true">
 
 
 
@@ -361,17 +361,17 @@
 <li>事件捕获</li>
 <li>W3C事件流(DOM事件流)</li>
 </ul>
-<a id="more"></a>
 <h3 id="什么是事件流"><a href="#什么是事件流" class="headerlink" title="什么是事件流"></a>什么是事件流</h3><blockquote>
 <p><strong>定义</strong>：<br>1.<code>事件流</code>描述的是从页面中接收<strong>事件</strong>的顺序,也可理解为<strong>事件</strong>在页面中传播的顺序。</p>
 <p>2.<code>事件</code>就是用户或浏览器自身执行的某种动作。诸如click(点击)、load(加载)、mouseover(鼠标悬停)。</p>
 <p>3.<code>事件处理程序</code>响应某个事件的<strong>函数</strong>就叫事件处理程序(或事件侦听器)。</p>
 </blockquote>
 <p>JS事件流最早要从IE和网景公司的浏览器大战说起，IE提出的是冒泡流，而网景提出的是捕获流，后来在W3C组织的统一之下，JS支持了冒泡流和捕获流，但是目前低版本的IE浏览器还是只能支持冒泡流(IE6,IE7,IE8均只支持冒泡流)，所以为了能够兼容更多的浏览器，建议大家使用冒泡流。</p>
+<a id="more"></a>
 <h3 id="事件冒泡"><a href="#事件冒泡" class="headerlink" title="事件冒泡"></a>事件冒泡</h3><p>微软提出了名为事件冒泡的事件流。事件冒泡可以形象地比喻为把一颗石头投入水中，泡泡会一直从水底冒出水面。也就是说，事件会从最内层的元素开始发生，一直向上传播，直到document对象，事件的传递应该是：<strong>p -&gt; div -&gt; body -&gt; html -&gt; document</strong>。</p>
 <h3 id="事件捕获"><a href="#事件捕获" class="headerlink" title="事件捕获"></a>事件捕获</h3><p>网景提出另一种事件流名为事件捕获与事件冒泡相反，事件会从最外层开始发生，直到最具体的元素。事件捕获顺序应该是：<strong>document -&gt; html -&gt; body -&gt; div -&gt; p</strong></p>
 <h3 id="W3C事件流-DOM事件流"><a href="#W3C事件流-DOM事件流" class="headerlink" title="W3C事件流(DOM事件流)"></a>W3C事件流(DOM事件流)</h3><p>当一个DOM事件被触发的时候，他并不是只在它的起源对象上触发一次，而是会经历三个不同的阶段。简而言之：事件一开始从文档的根节点流向目标对象(捕获阶段)，然后在目标对向上被触发(目标阶段)，之后再回溯到文档的根节点(冒泡阶段)如图所示（图片来自W3C）：</p>
-<p><a href="http://gitlab.qiyi.domain/zhangyanqiang/Technology-blog/blob/master/res/event.png" target="_blank" rel="noopener"><img src="https://images0.cnblogs.com/blog/707050/201507/181443001888733.png" alt="image"></a></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/event.png?raw=true"></p>
 <p><strong>事件捕获阶段(Capture Phase)</strong></p>
 <p>事件从文档的根节点出发，随着DOM树的结构向事件的目标节点流去。途中经过各个层次的DOM节点，并在各节点上触发捕获事件，直到到达时间的目标节点。捕获阶段的主要任务是简历传播路径，在冒泡阶段，时间会通过这个路径回溯到文档根节点。</p>
 <p>例如，通过下面的这个函数来给节点设置监听，可以通过将;设置成true来为事件的捕获阶段添加监听回调函数。</p>
