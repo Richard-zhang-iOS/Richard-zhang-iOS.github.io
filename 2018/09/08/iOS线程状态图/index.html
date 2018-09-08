@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="线程," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。  线程状态图综述 JAVA中线程状态图实例 iOS中NSThead线程状态图  线程状态图综述">
+<meta name="keywords" content="线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程状态图（线程的生命周期）">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/08/iOS线程状态图/index.html">
+<meta property="og:site_name" content="Richard-zhang-iOS的博客">
+<meta property="og:description" content="本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。  线程状态图综述 JAVA中线程状态图实例 iOS中NSThead线程状态图  线程状态图综述">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images0.cnblogs.com/blog/497634/201312/18152411-a974ea82ebc04e72bd874c3921f8bfec.jpg">
+<meta property="og:image" content="http://static.oschina.net/uploads/space/2013/0621/174442_0BNr_182175.jpg">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1903695-9f40f741153790bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/922">
+<meta property="og:updated_time" content="2018-09-08T09:26:23.501Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="线程状态图（线程的生命周期）">
+<meta name="twitter:description" content="本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。  线程状态图综述 JAVA中线程状态图实例 iOS中NSThead线程状态图  线程状态图综述">
+<meta name="twitter:image" content="https://images0.cnblogs.com/blog/497634/201312/18152411-a974ea82ebc04e72bd874c3921f8bfec.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/08/iOS线程状态图/"/>
+
+
+
+
+
+  <title>线程状态图（线程的生命周期） | Richard-zhang-iOS的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Richard-zhang-iOS的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/08/iOS线程状态图/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Richard-zhang-iOS">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Richard-zhang-iOS的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">线程状态图（线程的生命周期）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-08T17:24:56+08:00">
+                2018-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。</p>
+<ul>
+<li>线程状态图综述</li>
+<li>JAVA中线程状态图实例</li>
+<li>iOS中NSThead线程状态图</li>
+</ul>
+<h2 id="线程状态图综述"><a href="#线程状态图综述" class="headerlink" title="线程状态图综述"></a>线程状态图综述</h2><p><a href="https://images0.cnblogs.com/blog/497634/201312/18152411-a974ea82ebc04e72bd874c3921f8bfec.jpg" target="_blank" rel="noopener"><img src="https://images0.cnblogs.com/blog/497634/201312/18152411-a974ea82ebc04e72bd874c3921f8bfec.jpg" alt="img"></a></p>
+<a id="more"></a>
+<ol>
+<li><p><strong>新建状态(New) </strong>: 线程对象被创建后，就进入了新建状态。</p>
+</li>
+<li><p><strong>就绪状态(Runnable)</strong>: 也被称为“可执行状态”。线程对象被创建后，其它线程调用了该对象的start()方法，从而来启动该线程</p>
+</li>
+<li><p><strong>运行状态(Running)</strong> : 线程获取CPU权限进行执行。需要注意的是，线程只能从就绪状态进入到运行状态。</p>
+</li>
+<li><p><strong>阻塞状态(Blocked) </strong> : 阻塞状态是线程因为某种原因放弃CPU使用权，暂时停止运行。直到线程进入就绪状态，才有机会转到运行状态。阻塞的情况分三种：</p>
+<p><strong>等待阻塞</strong> – 通过调用线程的wait()方法，让线程等待某工作的完成。<br><strong>同步阻塞</strong> – 线程在获取synchronized同步锁失败(因为锁被其它线程所占用)，它会进入同步阻塞状态。<br><strong>其他阻塞</strong> – 通过调用线程的sleep()或join()或发出了I/O请求时，线程会进入到阻塞状态。当sleep()状态超时、join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入就绪状态。</p>
+</li>
+<li><p><strong>死亡状态(Dead)</strong>    : 线程执行完了或者因异常退出了run()方法，该线程结束生命周期。</p>
+</li>
+</ol>
+<p>下面通过一个更具体的运行图来再次解释线程的各个状态</p>
+<h2 id="JAVA中线程状态图实例"><a href="#JAVA中线程状态图实例" class="headerlink" title="JAVA中线程状态图实例"></a>JAVA中线程状态图实例</h2><p><img src="http://static.oschina.net/uploads/space/2013/0621/174442_0BNr_182175.jpg" alt="img"></p>
+<p>详细解释三种<strong>阻塞状态</strong></p>
+<p><strong>(一). 等待阻塞</strong>：运行(running)的线程执行o.wait()方法，JVM会把该线程放入等待队列(waitting queue)中。</p>
+<p><strong>(二). 同步阻塞：</strong>运行(running)的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入锁池(lock pool)中。</p>
+<p><strong>(三). 其他阻塞：</strong>运行(running)的线程执行Thread.sleep(long ms)或t.join()方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时、join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入可运行(runnable)状态。</p>
+<p><strong>补充：</strong></p>
+<p><strong>Synchronized是非公平锁。</strong> Synchronized在进入等待列表时，等待的线程会先尝试自旋获取锁，如果获取不到就进入等待列表，这明显对于已经进入队列的线程是不公平的。</p>
+<h2 id="iOS中NSThead线程状态图"><a href="#iOS中NSThead线程状态图" class="headerlink" title="iOS中NSThead线程状态图"></a>iOS中NSThead线程状态图</h2><p>下面是iOS中NSThead的使用详解</p>
+<p><strong>新建状态 :</strong> 实例化线程对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">说明：创建线程有多种方式，这里不做过多的介绍</span><br><span class="line">NSThread *thread =[[NSThread alloc] initWithTarget:self</span><br><span class="line">                                          selector:@selector(run)</span><br><span class="line">                                            object:nil];</span><br></pre></td></tr></table></figure>
+<p><strong>就绪状态 ：</strong>向线程对象发送 start 消息，detachNewThreadSelector 方法和 performSelectorInBackground 方法会直接实例化一个线程对象并加入可调度线程池</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">线程开启 : 线程进入可调度线程池</span><br><span class="line">[thread start];</span><br></pre></td></tr></table></figure>
+<p><strong>运行状态：</strong></p>
+<ul>
+<li>CPU 负责调度可调度线程池中线程的执行</li>
+<li>线程执行完成之前(死亡之前)，状态可能会在就绪和运行之间来回切换</li>
+<li>就绪和运行之间的状态变化由 CPU 负责，程序员不能干预</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/1903695-9f40f741153790bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/922" alt="img"></p>
+<ul>
+<li>当 CPU 调度当前线程 , 进入运行状态</li>
+<li>当 CPU 调度其他线程 , 进入就绪状态</li>
+</ul>
+<p><strong>阻塞状态</strong>  : 当满足某个预定条件时，可以使用休眠或锁阻塞线程执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">方法执行过程，符合某一条件时，可以利用 sleep 方法让线程进入 阻塞 状态</span><br><span class="line"></span><br><span class="line">sleepForTimeInterval：    //休眠指定时长    (从现在起睡多少秒)</span><br><span class="line">sleepUntilDate：          //休眠到指定日期 (从现在起睡到指定的日期)</span><br><span class="line">@synchronized(self) &#123; &#125;   //互斥锁</span><br></pre></td></tr></table></figure>
+<p><strong>死亡状态</strong>： (一旦线程停止或死亡了，就不能再次开启任务 , 后续的所有代码都不会被执行 )</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 正常死亡</span><br><span class="line">- 线程执行完毕</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(2) 非正常死亡</span><br><span class="line">- [NSThread exit](自杀)      当满足某个条件后，在线程内部自己中止执行</span><br><span class="line">- (被逼着死亡) 当满足某个条件后，在主线程给其它线程打个死亡标记,让子线程自行了断.</span><br><span class="line">注意：在终止线程之前，应该注意释放之前分配的对象！</span><br></pre></td></tr></table></figure>
+<p>内存情况 : 线程死亡后，线程对象从内存中移除</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/线程/" rel="tag"># 线程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/30/JavaScrip中this原理及经验/" rel="next" title="JavaScrip中this原理及经验">
+                <i class="fa fa-chevron-left"></i> JavaScrip中this原理及经验
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Richard-zhang-iOS" />
+            
+              <p class="site-author-name" itemprop="name">Richard-zhang-iOS</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Richard-zhang-iOS" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zyqzhangyanqiang@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程状态图综述"><span class="nav-number">1.</span> <span class="nav-text">线程状态图综述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA中线程状态图实例"><span class="nav-number">2.</span> <span class="nav-text">JAVA中线程状态图实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS中NSThead线程状态图"><span class="nav-number">3.</span> <span class="nav-text">iOS中NSThead线程状态图</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Richard-zhang-iOS</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
