@@ -87,14 +87,14 @@
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
 <meta property="og:description" content="本文主要讨论操作系统中进程的状态，不同操作系统有对应的进程状态图，但是一般可归为以下几类  三态模型  五态模型  细分五态模型   三态模型三态模型：在多道程序系统中，进程在处理器上交替运行，状态也不断地发生变化。进程一般有3种基本状态：运行、就绪和阻塞。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/三态.jpeg?raw=true">
-<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/细分五态.jpeg?raw=true">
-<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/五态.jpeg?raw=true">
-<meta property="og:updated_time" content="2018-09-09T04:42:26.175Z">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/三态.png?raw=true">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/细分五态.png?raw=true">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/五态.png?raw=true">
+<meta property="og:updated_time" content="2018-09-09T05:28:07.921Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="操作系统之进程状态图">
 <meta name="twitter:description" content="本文主要讨论操作系统中进程的状态，不同操作系统有对应的进程状态图，但是一般可归为以下几类  三态模型  五态模型  细分五态模型   三态模型三态模型：在多道程序系统中，进程在处理器上交替运行，状态也不断地发生变化。进程一般有3种基本状态：运行、就绪和阻塞。">
-<meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/三态.jpeg?raw=true">
+<meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/三态.png?raw=true">
 
 
 
@@ -366,17 +366,17 @@
 </li>
 </ul>
 <h2 id="三态模型"><a href="#三态模型" class="headerlink" title="三态模型"></a>三态模型</h2><p><strong>三态模型：</strong>在多道程序系统中，进程在处理器上交替运行，状态也不断地发生变化。进程一般有3种基本状态：<strong>运行、就绪和阻塞</strong>。</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/三态.jpeg?raw=true"></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/三态.png?raw=true"></p>
 <a id="more"></a>
 <p>（1）就绪：当一个进程获得了除处理机以外的一切所需资源，一旦得到处理机即可运行，则称此进程处于就绪状态。就绪进程可以按多个优先级来划分队列。例如，当一个进程由于时间片用完而进入就绪状态时，排入低优先级队列；当进程由I／O操作完成而进入就绪状态时，排入高优先级队列。</p>
 <p>（2）运行：当一个进程在处理机上运行时，则称该进程处于运行状态。处于此状态的进程的数目小于等于处理器的数目，对于单处理机系统，处于运行状态的进程只有一个。在没有其他进程可以执行时（如所有进程都在阻塞状态），通常会自动执行系统的空闲进程。</p>
 <p>（3）阻塞：也称为等待或睡眠状态，一个进程正在等待某一事件发生（例如请求I/O而等待I/O完成等）而暂时停止运行，这时即使把处理机分配给进程也无法运行，故称该进程处于阻塞状态。</p>
 <h2 id="五态模型"><a href="#五态模型" class="headerlink" title="五态模型"></a>五态模型</h2><p><strong>五态模型：</strong>对于一个实际的系统，进程的状态及其转换更为复杂。引入<strong>新建态和终止态</strong>构成了进程的五态模型。</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/细分五态.jpeg?raw=true"></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/细分五态.png?raw=true"></p>
 <p><strong>新建态：</strong> 对应于进程刚刚被创建时没有被提交的状态，并等待系统完成创建进程的所有必要信息。 进程正在创建过程中，还不能运行。操作系统在创建状态要进行的工作包括分配和建立进程控制块表项、建立资源表格（如打开文件表）并分配资源、加载程序并建立地址空间表等。创建进程时分为两个阶段，第一个阶段为一个新进程创建必要的管理信息，第二个阶段让该进程进入就绪状态。由于有了新建态，操作系统往往可以根据系统的性能和主存容量的限制推迟新建态进程的提交。</p>
 <p><strong>终止态：</strong>进程已结束运行，回收除进程控制块之外的其他资源，并让其他进程从进程控制块中收集有关信息（如记帐和将退出代码传递给父进程）。类似的，进程的终止也可分为两个阶段，第一个阶段等待操作系统进行善后处理，第二个阶段释放主存。</p>
 <h2 id="细分五态模型"><a href="#细分五态模型" class="headerlink" title="细分五态模型"></a>细分五态模型</h2><p><strong>细分五态模型：</strong>由于进程的不断创建，系统资源特别是主存资源已不能满足所有进程运行的要求。这时，<strong>就必须将某些进程挂起，放到磁盘对换区</strong>，暂时不参加调度，以平衡系统负载；进程挂起的原因可能是系统故障，或者是用户调试程序，也可能是需要检查问题。</p>
-<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/五态.jpeg?raw=true"></p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/五态.png?raw=true"></p>
 <p><strong>活跃就绪：</strong>是指进程在主存并且可被调度的状态。</p>
 <p><strong>静止就绪（挂起就绪）</strong>：是指进程被对换到辅存时的就绪状态，是不能被直接调度的状态，只有当主存中没有活跃就绪态进程，或者是挂起就绪态进程具有更高的优先级，系统将把挂起就绪态进程调回主存并转换为活跃就绪。</p>
 <p><strong>活跃阻塞：</strong>是指进程已在主存，一旦等待的事件产生便进入活跃就绪状态。</p>
