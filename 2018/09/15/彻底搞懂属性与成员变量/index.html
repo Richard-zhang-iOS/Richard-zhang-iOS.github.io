@@ -79,19 +79,19 @@
 
 
 
-<meta name="description" content="本文主要解决如下问题  属性和成员变量的区别？ @property、@synthesize和@dynamic的本质？ 类别中如何添加属性？ self.var和_var之间的区别？ 属性、成员变量、self.var、_var使用经验总结  下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下  举例说明各个专业概念的意义 @property、@synthesize、@dynamic本质 重">
+<meta name="description" content="本文主要解决如下问题  成员变量、实例变量、属性变量、局部变量、全局变量的概念 @property、@synthesize、@dynamic本质 重写getter和setter方法注意事项 类别（Category）中属性Property 类别（Category）中添加实例变量 Objective-C 中的点语法 self.和下划线的区别 属性、成员变量、self.var、_var使用经验总结  案">
 <meta name="keywords" content="关键字">
 <meta property="og:type" content="article">
-<meta property="og:title" content="彻底搞清OC属性与成员变量">
+<meta property="og:title" content="iOS彻底搞清属性与成员变量">
 <meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/15/彻底搞懂属性与成员变量/index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
-<meta property="og:description" content="本文主要解决如下问题  属性和成员变量的区别？ @property、@synthesize和@dynamic的本质？ 类别中如何添加属性？ self.var和_var之间的区别？ 属性、成员变量、self.var、_var使用经验总结  下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下  举例说明各个专业概念的意义 @property、@synthesize、@dynamic本质 重">
+<meta property="og:description" content="本文主要解决如下问题  成员变量、实例变量、属性变量、局部变量、全局变量的概念 @property、@synthesize、@dynamic本质 重写getter和setter方法注意事项 类别（Category）中属性Property 类别（Category）中添加实例变量 Objective-C 中的点语法 self.和下划线的区别 属性、成员变量、self.var、_var使用经验总结  案">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/category-property.png?raw=true">
-<meta property="og:updated_time" content="2018-09-15T09:31:40.191Z">
+<meta property="og:updated_time" content="2018-09-15T09:35:38.177Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="彻底搞清OC属性与成员变量">
-<meta name="twitter:description" content="本文主要解决如下问题  属性和成员变量的区别？ @property、@synthesize和@dynamic的本质？ 类别中如何添加属性？ self.var和_var之间的区别？ 属性、成员变量、self.var、_var使用经验总结  下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下  举例说明各个专业概念的意义 @property、@synthesize、@dynamic本质 重">
+<meta name="twitter:title" content="iOS彻底搞清属性与成员变量">
+<meta name="twitter:description" content="本文主要解决如下问题  成员变量、实例变量、属性变量、局部变量、全局变量的概念 @property、@synthesize、@dynamic本质 重写getter和setter方法注意事项 类别（Category）中属性Property 类别（Category）中添加实例变量 Objective-C 中的点语法 self.和下划线的区别 属性、成员变量、self.var、_var使用经验总结  案">
 <meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/category-property.png?raw=true">
 
 
@@ -128,7 +128,7 @@
 
 
 
-  <title>彻底搞清OC属性与成员变量 | Richard-zhang-iOS的博客</title>
+  <title>iOS彻底搞清属性与成员变量 | Richard-zhang-iOS的博客</title>
   
 
 
@@ -282,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">彻底搞清OC属性与成员变量</h1>
+          <h1 class="post-title" itemprop="name headline">iOS彻底搞清属性与成员变量</h1>
         
 
         <div class="post-meta">
@@ -356,27 +356,19 @@
       
         <p>本文主要解决如下问题</p>
 <ul>
-<li>属性和成员变量的区别？</li>
-<li>@property、@synthesize和@dynamic的本质？</li>
-<li>类别中如何添加属性？</li>
-<li>self.var和_var之间的区别？</li>
-<li>属性、成员变量、self.var、_var使用经验总结</li>
-</ul>
-<p>下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下</p>
-<ul>
-<li>举例说明各个专业概念的意义</li>
+<li>成员变量、实例变量、属性变量、局部变量、全局变量的概念</li>
 <li>@property、@synthesize、@dynamic本质</li>
 <li>重写getter和setter方法注意事项</li>
 <li>类别（Category）中属性Property</li>
 <li>类别（Category）中添加实例变量</li>
 <li>Objective-C 中的点语法</li>
 <li>self.和下划线的区别</li>
-<li>属性、成员变量、self.var、_var使用经验总结<a id="more"></a>
-<h2 id="案例讲解"><a href="#案例讲解" class="headerlink" title="案例讲解"></a>案例讲解</h2></li>
+<li>属性、成员变量、self.var、_var使用经验总结</li>
 </ul>
-<p>本节通过实例解释成员变量、实例变量、属性变量、局部变量、全局变量的概念</p>
+<h2 id="案例讲解"><a href="#案例讲解" class="headerlink" title="案例讲解"></a>案例讲解</h2><p>本节通过实例解释成员变量、实例变量、属性变量、局部变量、全局变量的概念</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">@interface MyViewController :UIViewControlle</span><br><span class="line">&#123;</span><br><span class="line">UIButton *yourButton;//实例变量</span><br><span class="line">int count;//成员变量</span><br><span class="line">id data；//实例变量</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic, strong) UIButton *myButton;//公有属性</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line">@interface ViewController ()</span><br><span class="line">&#123;</span><br><span class="line">    BOOL test;//成员变量</span><br><span class="line">    NSString *myString;//实例变量</span><br><span class="line">&#125;</span><br><span class="line">@property(nonatomic,strong,readwrite)NSString *name;//私有属性</span><br><span class="line">@end</span><br><span class="line">static int hu=3;//全局变量</span><br><span class="line">NSString*sttr1=@”S1ViewController”;//全局变量</span><br><span class="line">@implementation ViewController</span><br><span class="line">&#123;</span><br><span class="line">    BOOL test1;//成员变量</span><br><span class="line">&#125;</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // 局部变量</span><br><span class="line">    NSArray *array = [[NSArray alloc] initWithObject:@“123”,nil];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h3 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a><strong>成员变量</strong></h3><ul>
 <li><strong>成员变量</strong>是定义在<code>｛｝</code>号中的变量。（包括.h和.m中，yourButton、count、data、test1都是成员变量）</li>
 <li>成员变量用于类内部，无需与外界接触的变量。</li>
