@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="关键字," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文主要解决如下问题  属性和成员变量的区别？ @property、@synthesize和@dynamic的本质？ 类别中如何添加属性？ self.var和_var之间的区别？ 属性、成员变量、self.var、_var使用经验总结  下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下  举例说明各个专业概念的意义 @property、@synthesize、@dynamic本质 重">
+<meta name="keywords" content="关键字">
+<meta property="og:type" content="article">
+<meta property="og:title" content="彻底搞清OC属性与成员变量">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/15/彻底搞懂属性与成员变量/index.html">
+<meta property="og:site_name" content="Richard-zhang-iOS的博客">
+<meta property="og:description" content="本文主要解决如下问题  属性和成员变量的区别？ @property、@synthesize和@dynamic的本质？ 类别中如何添加属性？ self.var和_var之间的区别？ 属性、成员变量、self.var、_var使用经验总结  下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下  举例说明各个专业概念的意义 @property、@synthesize、@dynamic本质 重">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/category-property.png?raw=true">
+<meta property="og:updated_time" content="2018-09-15T09:31:40.191Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="彻底搞清OC属性与成员变量">
+<meta name="twitter:description" content="本文主要解决如下问题  属性和成员变量的区别？ @property、@synthesize和@dynamic的本质？ 类别中如何添加属性？ self.var和_var之间的区别？ 属性、成员变量、self.var、_var使用经验总结  下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下  举例说明各个专业概念的意义 @property、@synthesize、@dynamic本质 重">
+<meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/category-property.png?raw=true">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/15/彻底搞懂属性与成员变量/"/>
+
+
+
+
+
+  <title>彻底搞清OC属性与成员变量 | Richard-zhang-iOS的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Richard-zhang-iOS的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/15/彻底搞懂属性与成员变量/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Richard-zhang-iOS">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Richard-zhang-iOS的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">彻底搞清OC属性与成员变量</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-15T17:27:55+08:00">
+                2018-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要解决如下问题</p>
+<ul>
+<li>属性和成员变量的区别？</li>
+<li>@property、@synthesize和@dynamic的本质？</li>
+<li>类别中如何添加属性？</li>
+<li>self.var和_var之间的区别？</li>
+<li>属性、成员变量、self.var、_var使用经验总结</li>
+</ul>
+<p>下面我们通过具体内容来回答上面的几个问题，本文章所包括章节如下</p>
+<ul>
+<li>举例说明各个专业概念的意义</li>
+<li>@property、@synthesize、@dynamic本质</li>
+<li>重写getter和setter方法注意事项</li>
+<li>类别（Category）中属性Property</li>
+<li>类别（Category）中添加实例变量</li>
+<li>Objective-C 中的点语法</li>
+<li>self.和下划线的区别</li>
+<li>属性、成员变量、self.var、_var使用经验总结<a id="more"></a>
+<h2 id="案例讲解"><a href="#案例讲解" class="headerlink" title="案例讲解"></a>案例讲解</h2></li>
+</ul>
+<p>本节通过实例解释成员变量、实例变量、属性变量、局部变量、全局变量的概念</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;UIKit/UIKit.h&gt;</span><br><span class="line">@interface MyViewController :UIViewControlle</span><br><span class="line">&#123;</span><br><span class="line">UIButton *yourButton;//实例变量</span><br><span class="line">int count;//成员变量</span><br><span class="line">id data；//实例变量</span><br><span class="line">&#125;</span><br><span class="line">@property (nonatomic, strong) UIButton *myButton;//公有属性</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line">@interface ViewController ()</span><br><span class="line">&#123;</span><br><span class="line">    BOOL test;//成员变量</span><br><span class="line">    NSString *myString;//实例变量</span><br><span class="line">&#125;</span><br><span class="line">@property(nonatomic,strong,readwrite)NSString *name;//私有属性</span><br><span class="line">@end</span><br><span class="line">static int hu=3;//全局变量</span><br><span class="line">NSString*sttr1=@”S1ViewController”;//全局变量</span><br><span class="line">@implementation ViewController</span><br><span class="line">&#123;</span><br><span class="line">    BOOL test1;//成员变量</span><br><span class="line">&#125;</span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // 局部变量</span><br><span class="line">    NSArray *array = [[NSArray alloc] initWithObject:@“123”,nil];</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h3 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a><strong>成员变量</strong></h3><ul>
+<li><strong>成员变量</strong>是定义在<code>｛｝</code>号中的变量。（包括.h和.m中，yourButton、count、data、test1都是成员变量）</li>
+<li>成员变量用于类内部，无需与外界接触的变量。</li>
+</ul>
+<h3 id="实例变量"><a href="#实例变量" class="headerlink" title="实例变量"></a><strong>实例变量</strong></h3><ul>
+<li>如果<strong>成员变量</strong>的数据类型是一个类则称这个变量为<strong>实例变量</strong>。（yourButton、data、myString是实例变量）</li>
+<li><strong>实例变量+基本数据类型变量=成员变量</strong></li>
+</ul>
+<h3 id="属性变量"><a href="#属性变量" class="headerlink" title="属性变量"></a>属性变量</h3><ul>
+<li>有前缀 <code>@property</code></li>
+<li>编译器会为属性自动添加存取方法（setter、getter）和适当的<strong>实例变量</strong>（属性前加下划线_var）</li>
+<li>可以通过“点语法”访问属性，编译器会把“点语法”转换为对存取方法的调用（使用“点语法”的效果与直接调用存取方法相同）。</li>
+<li>写在.m中的属性是私有属性，如上面代码中name属性，只能在本类内部使用</li>
+<li>私有属性和公有属性的区别是是否能在类外部访问，私有属性不能继承给子类，其他相同（都会自动生成get/set方法，生成下划线的实例变量）</li>
+<li>公有属性变量是用于与其他对象交互的变量。</li>
+<li>正因为属性变量要与其他对象交互，也就有了属性修饰符或者叫属性特质（attribute）。如：<code>nonatomic</code>,<code>readwrite</code>,<code>copy</code>等等</li>
+</ul>
+<h3 id="局部变量："><a href="#局部变量：" class="headerlink" title="局部变量："></a>局部变量：</h3><p>局部变量是根据其生存周期定义的，在源文件中的array，其生命周期是在以“{ }”为界限的代码块中，虽然它的名称与成员变量相同，但不是同一个变量。</p>
+<h3 id="全局变量："><a href="#全局变量：" class="headerlink" title="全局变量："></a>全局变量：</h3><p>定义：在@implementation外定义的变量（在@implementation中定义也是可以但是一般不这么干）</p>
+<h2 id="property、-synthesize、-dynamic本质"><a href="#property、-synthesize、-dynamic本质" class="headerlink" title="@property、@synthesize、@dynamic本质"></a>@property、@synthesize、@dynamic本质</h2><h3 id="property原理"><a href="#property原理" class="headerlink" title="@property原理"></a>@property原理</h3><p>@property = ivar + getter + setter;</p>
+<p>实例变量+get方法+set方法,也就是说使用@property 系统会自动生成setter和getter方法;</p>
+<p>我们每次在增加一个属性,系统都会在 ivar_list 中添加一个成员变量的描述,在 method_list 中增加 setter 与 getter 方法的描述,在属性列表中增加一个属性的描述,然后计算该属性在对象中的偏移量,然后给出 setter 与 getter 方法对应的实现,在 setter 方法中从偏移量的位置开始赋值,在 getter 方法中从偏移量开始取值,为了能够读取正确字节数,系统对象偏移量的指针类型进行了类型强转.</p>
+<h3 id="synthesize"><a href="#synthesize" class="headerlink" title="@synthesize"></a>@synthesize</h3><p>@synthesize的作用：（1）如果属性没有手动实现setter和getter方法，编译器为你自动生成setter与getter方法。（2）可以指定与属性对应的实例变量</p>
+<h3 id="dynamic"><a href="#dynamic" class="headerlink" title="@dynamic"></a>@dynamic</h3><p>@dynamic 告诉编译器：属性的 setter 与 getter 方法由用户自己实现，不自动生成</p>
+<p>假如一个属性被声明为 @dynamic var，而且你没有提供 @setter方法和 @getter 方法，编译的时候没问题，但是当程序运行到 instance.var = someVar，由于缺 setter 方法会导致程序崩溃；或者当运行到 someVar = var 时，由于缺 getter 方法同样会导致崩溃。编译时没问题，运行时才执行相应的方法，这就是所谓的动态绑定。</p>
+<h2 id="重写getter和setter方法注意事项"><a href="#重写getter和setter方法注意事项" class="headerlink" title="重写getter和setter方法注意事项"></a>重写getter和setter方法注意事项</h2><p><strong>只重写getter（懒加载）</strong>：默认会自动生成下划线开头的变量，在getter中要使用下划线（return _var）来返回值，不能使用self.否则造成死循环</p>
+<p><strong>只重写setter</strong>：默认会自动生成下划线开头的变量，在setter中要使用下划线（ _var = var）来接收值，不能使用self.否则造成死循环</p>
+<p><strong>两个都重写</strong> ：同时手动重写了一个属性的get和set方法的话，Xcode不会再自动生成带有下划线的私有成员变量了这时如果不加，@synthesize就会报错，解决方法就是添加@syntheszie var = _var<em>**</em></p>
+<p><strong>readonly 和 writeonly情况下重写</strong>：这时属性只会生成getter或者setter方法，如果我们重写了该方法，就需要我们重新添加@synthesize</p>
+<h2 id="类别（Category）中属性Property"><a href="#类别（Category）中属性Property" class="headerlink" title="类别（Category）中属性Property"></a>类别（Category）中属性Property</h2><p>类别中只能添加方法，不能添加实例变量。我们经常看见在类别中这样写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@property (nonatomic, assign) CGFloat x;</span><br></pre></td></tr></table></figure>
+<p><strong>在这种情况下是不会自动生成实例变量的。这里添加的属性，其实是添加的setter和getter方法</strong>。</p>
+<p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/category-property.png?raw=true"></p>
+<p>在Objective-C提供的runtime函数中，确实有一个class_addIvar()函数用于给类添加成员变量，但是文档中特别说明：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This function may only be called after objc_allocateClassPair and before objc_registerClassPair. Adding an instance variable to an existing class is not supported.</span><br></pre></td></tr></table></figure>
+<p>意思是说，这个函数只能在“构建一个类的过程中”调用。一旦完成类定义，就不能再添加成员变量了。经过编译的类在程序启动后就<code>runtime</code>加载，没有机会调用<code>addIvar</code>。程序在运行时动态构建的类需要在调用 objc_allocateClassPair 之后，objc_registerClassPair之前才可以被使用，同样没有机会再添加成员变量。那为什么可以在类别中添加方法和属性呢？<br>因为方法和属性并不“属于”类实例，而成员变量“属于”类实例。我们所说的“类实例”概念，指的是一块内存区域，包含了isa指针和所有的成员变量。所以假如允许动态修改类成员变量布局，已经创建出的类实例就不符合类定义了，变成了无效对象。但方法定义是在objc_class中管理的，不管如何增删类方法，都不影响类实例的内存布局，已经创建出的类实例仍然可正常使用。</p>
+<h5 id="在类别中添加实例变量"><a href="#在类别中添加实例变量" class="headerlink" title="在类别中添加实例变量"></a>在类别中添加实例变量</h5><p>那我偏偏想要在类别中添加实例变量该怎么办呢？这时候就要用到runtime了，不要忘记了Objective-C是动态语言。一种常见的办法是通过runtime.h中<code>objc_getAssociatedObject / objc_setAssociatedObject</code>来访问和生成关联对象。这两个方法可以让一个对象和另一个对象关联，就是说一个对象可以保持对另一个对象的引用，并获取那个对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//.h文件代码</span><br><span class="line">//NSObject+IndieBandName.h</span><br><span class="line">@interface NSObject (IndieBandName)</span><br><span class="line">@property (nonatomic, strong) NSString *indieBandName;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">.m文件中代码</span><br><span class="line">// NSObject+IndieBandName.m </span><br><span class="line">#import &quot;NSObject+Extension.h&quot;</span><br><span class="line">#import &lt;objc/runtime.h&gt;</span><br><span class="line">static const void *IndieBandNameKey = &amp;IndieBandNameKey; </span><br><span class="line">@implementation NSObject (IndieBandName)</span><br><span class="line">@dynamic indieBandName;</span><br><span class="line">- (NSString *)indieBandName &#123; </span><br><span class="line">return objc_getAssociatedObject(self, IndieBandNameKey);</span><br><span class="line">&#125;</span><br><span class="line">- (void)setIndieBandName:(NSString *)indieBandName &#123; </span><br><span class="line">objc_setAssociatedObject(self, IndieBandNameKey, indieBandName, OBJC_ASSOCIATION_RETAIN_NONATOMIC);</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>通过runtime的两种方法就可以为类别添加一个实例变量了。</p>
+<h2 id="Objective-C-中的点语法"><a href="#Objective-C-中的点语法" class="headerlink" title="Objective-C 中的点语法"></a>Objective-C 中的点语法</h2><ul>
+<li><code>点表达式(.)</code>看起来与C语言中的结构体访问以及java语言汇总的对象访问有点类似，如果点表达式出现在等号 <code>＝</code> 左边，调用该属性名称的<code>setter</code>方法。如果点表达式出现在<code>＝</code>右边，调用该属性名称的<code>getter</code>方法。</li>
+<li>OC中<code>点表达式(.)</code>其实就是调用对象的<code>setter</code>和<code>getter</code>方法的一种快捷方式，<code>self.myString = @&quot;张三&quot;;</code>实际就是<code>[self setmyString:@&quot;张三&quot;];</code></li>
+</ul>
+<h2 id="self-var和-var的区别"><a href="#self-var和-var的区别" class="headerlink" title="self.var和_var的区别"></a>self.var和_var的区别</h2><p>其中<strong>self.var是调用的xx属性的get/set方法，而__var则只是使用成员变量_var，并不会调用get/set方法</strong>。两者的更深层次的区别在于，通过存取方法访问比直接访问多做了一些其他的事情（例如内存管理，复制值等），例如如果属性在@property中属性的修饰符有retain，那么当使用self.xx的时候相应的属性的引用计数器由于生成了setter方法而进行加1操作，此时的retaincount为2</p>
+<h2 id="属性、成员变量、self-var、-var使用经验总结"><a href="#属性、成员变量、self-var、-var使用经验总结" class="headerlink" title="属性、成员变量、self.var、_var使用经验总结"></a>属性、成员变量、self.var、_var使用经验总结</h2><ul>
+<li><p>需要与外部类交互的都写成属性</p>
+</li>
+<li><p>所有属性在使用时最好使用self.来调用，其他内部使用的对象尽量用成员变量定义（减少内存占用，调用更快）</p>
+</li>
+<li><p>需要懒加载的对象定义为属性（或私有属性）</p>
+</li>
+<li><p>重写getter(懒加载)和setter方法时在内部使用_var来操作，避免造成死锁。</p>
+<p>​</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/关键字/" rel="tag"># 关键字</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/09/进程和线程的区别/" rel="next" title="进程和线程的区别">
+                <i class="fa fa-chevron-left"></i> 进程和线程的区别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Richard-zhang-iOS" />
+            
+              <p class="site-author-name" itemprop="name">Richard-zhang-iOS</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Richard-zhang-iOS" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zyqzhangyanqiang@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#案例讲解"><span class="nav-number">1.</span> <span class="nav-text">案例讲解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#成员变量"><span class="nav-number">1.1.</span> <span class="nav-text">成员变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实例变量"><span class="nav-number">1.2.</span> <span class="nav-text">实例变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#属性变量"><span class="nav-number">1.3.</span> <span class="nav-text">属性变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#局部变量："><span class="nav-number">1.4.</span> <span class="nav-text">局部变量：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全局变量："><span class="nav-number">1.5.</span> <span class="nav-text">全局变量：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#property、-synthesize、-dynamic本质"><span class="nav-number">2.</span> <span class="nav-text">@property、@synthesize、@dynamic本质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#property原理"><span class="nav-number">2.1.</span> <span class="nav-text">@property原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#synthesize"><span class="nav-number">2.2.</span> <span class="nav-text">@synthesize</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dynamic"><span class="nav-number">2.3.</span> <span class="nav-text">@dynamic</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重写getter和setter方法注意事项"><span class="nav-number">3.</span> <span class="nav-text">重写getter和setter方法注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类别（Category）中属性Property"><span class="nav-number">4.</span> <span class="nav-text">类别（Category）中属性Property</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#在类别中添加实例变量"><span class="nav-number">4.0.0.1.</span> <span class="nav-text">在类别中添加实例变量</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Objective-C-中的点语法"><span class="nav-number">5.</span> <span class="nav-text">Objective-C 中的点语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-var和-var的区别"><span class="nav-number">6.</span> <span class="nav-text">self.var和_var的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#属性、成员变量、self-var、-var使用经验总结"><span class="nav-number">7.</span> <span class="nav-text">属性、成员变量、self.var、_var使用经验总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Richard-zhang-iOS</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
