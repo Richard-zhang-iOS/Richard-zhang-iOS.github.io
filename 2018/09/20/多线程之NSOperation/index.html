@@ -98,7 +98,7 @@
 <meta property="og:image" content="https://ysc-demo-1254961422.file.myqcloud.com/YSC-NSOperation-demo-result09.png">
 <meta property="og:image" content="https://ysc-demo-1254961422.file.myqcloud.com/YSC-NSOperation-demo-result10.png">
 <meta property="og:image" content="https://ysc-demo-1254961422.file.myqcloud.com/YSC-NSOperation-demo-result11.png">
-<meta property="og:updated_time" content="2018-09-20T13:55:01.494Z">
+<meta property="og:updated_time" content="2018-09-20T14:02:17.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多线程之NSOperation">
 <meta name="twitter:description" content="本文详细介绍了NSOperation和NSOperationQueue在iOS中的使用，主要包括以下几个方面  NSOperation、NSOperationQueue简介 NSOperation、NSOperationQueue使用步骤 NSOperationQueue 控制串行、并发 NSOperation 操作依赖 NSOperation 优先级 NSOperationQueue 线程间的通">
@@ -374,7 +374,7 @@
 <li>NSOperationQueue 线程间的通信</li>
 <li>NSOperation、NSOperationQueue 常用属性和方法归纳</li>
 </ul>
-<h1 id="NSOperation、NSOperationQueue-简介"><a href="#NSOperation、NSOperationQueue-简介" class="headerlink" title="NSOperation、NSOperationQueue 简介"></a>NSOperation、NSOperationQueue 简介</h1><p>NSOperation、NSOperationQueue 是苹果提供给我们的一套多线程解决方案。实际上 NSOperation、NSOperationQueue 是基于 GCD 更高一层的封装，完全面向对象。但是比 GCD 更简单易用、代码可读性也更高。我们在介绍<a href="">GCD</a>的时候介绍了任务和队列的概念NSOperation其实就是我们上面所说的任务，但是这个类不能直接使用，我们要用他的两个子类，NSBlockOperation和NSInvocationOperation，而NSOperationQueue就是类似于GCD中的队列，用于管理你加入到其中的任务。</p>
+<h1 id="NSOperation、NSOperationQueue-简介"><a href="#NSOperation、NSOperationQueue-简介" class="headerlink" title="NSOperation、NSOperationQueue 简介"></a>NSOperation、NSOperationQueue 简介</h1><p>NSOperation、NSOperationQueue 是苹果提供给我们的一套多线程解决方案。实际上 NSOperation、NSOperationQueue 是基于 GCD 更高一层的封装，完全面向对象。但是比 GCD 更简单易用、代码可读性也更高。我们在介绍<a href="https://richard-zhang-ios.github.io/2018/09/20/多线程之GCD/" target="_blank" rel="noopener">GCD</a>的时候介绍了任务和队列的概念NSOperation其实就是我们上面所说的任务，但是这个类不能直接使用，我们要用他的两个子类，NSBlockOperation和NSInvocationOperation，而NSOperationQueue就是类似于GCD中的队列，用于管理你加入到其中的任务。</p>
 <a id="more"></a>
 <ul>
 <li>任务（NSOperation）：<ul>
