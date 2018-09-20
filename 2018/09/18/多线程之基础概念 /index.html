@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="线程," />
+  <meta name="keywords" content="多线程," />
 
 
 
@@ -80,17 +80,17 @@
 
 
 <meta name="description" content="本文主要对比了iOS多线程编程中所涉及的一些概念  进程 vs. 线程 同步 vs. 异步 串行 vs. 并发 并行 vs. 并发 任务 vs. 队列 队列 vs. 线程 同步 vs. 互斥 异步 + 串行 异步 + 并发 同步 + 串行（很少使用、可能死锁） 同步 + 并发（很少使用）">
-<meta name="keywords" content="线程">
+<meta name="keywords" content="多线程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="多线程基础概念">
-<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/18/多线程基础概念 /index.html">
+<meta property="og:title" content="多线程之基础概念">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/18/多线程之基础概念 /index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
 <meta property="og:description" content="本文主要对比了iOS多线程编程中所涉及的一些概念  进程 vs. 线程 同步 vs. 异步 串行 vs. 并发 并行 vs. 并发 任务 vs. 队列 队列 vs. 线程 同步 vs. 互斥 异步 + 串行 异步 + 并发 同步 + 串行（很少使用、可能死锁） 同步 + 并发（很少使用）">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/sync_async.png?raw=true">
-<meta property="og:updated_time" content="2018-09-18T13:46:56.885Z">
+<meta property="og:updated_time" content="2018-09-20T13:54:24.822Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="多线程基础概念">
+<meta name="twitter:title" content="多线程之基础概念">
 <meta name="twitter:description" content="本文主要对比了iOS多线程编程中所涉及的一些概念  进程 vs. 线程 同步 vs. 异步 串行 vs. 并发 并行 vs. 并发 任务 vs. 队列 队列 vs. 线程 同步 vs. 互斥 异步 + 串行 异步 + 并发 同步 + 串行（很少使用、可能死锁） 同步 + 并发（很少使用）">
 <meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/sync_async.png?raw=true">
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/18/多线程基础概念 /"/>
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/18/多线程之基础概念 /"/>
 
 
 
 
 
-  <title>多线程基础概念 | Richard-zhang-iOS的博客</title>
+  <title>多线程之基础概念 | Richard-zhang-iOS的博客</title>
   
 
 
@@ -265,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/18/多线程基础概念 /">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/18/多线程之基础概念 /">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Richard-zhang-iOS">
@@ -282,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">多线程基础概念</h1>
+          <h1 class="post-title" itemprop="name headline">多线程之基础概念</h1>
         
 
         <div class="post-meta">
@@ -317,8 +317,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/计算机/" itemprop="url" rel="index">
-                    <span itemprop="name">计算机</span>
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
                   </a>
                 </span>
 
@@ -445,7 +445,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/线程/" rel="tag"># 线程</a>
+            <a href="/tags/多线程/" rel="tag"># 多线程</a>
           
         </div>
       
@@ -467,6 +467,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/20/多线程之GCD/" rel="prev" title="多线程之GCD">
+                多线程之GCD <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -547,7 +551,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -569,7 +573,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

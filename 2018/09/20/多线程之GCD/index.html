@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="多线程," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文详细介绍了GCD在iOS中的使用，主要包括以下几个方面  GCD 简介 GCD优点 GCD基础概念 GCD 的使用步骤 GCD 组合方式 GCD 常用方法总结  GCD 简介 Grand Central Dispatch(GCD) 是 Apple 开发的一个多核编程的较新的解决方法。它主要用于优化应用程序以支持多核处理器以及其他对称多处理系统。它是一个在线程池模式的基础上执行的并发任务。在 M">
+<meta name="keywords" content="多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="多线程之GCD">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/20/多线程之GCD/index.html">
+<meta property="og:site_name" content="Richard-zhang-iOS的博客">
+<meta property="og:description" content="本文详细介绍了GCD在iOS中的使用，主要包括以下几个方面  GCD 简介 GCD优点 GCD基础概念 GCD 的使用步骤 GCD 组合方式 GCD 常用方法总结  GCD 简介 Grand Central Dispatch(GCD) 是 Apple 开发的一个多核编程的较新的解决方法。它主要用于优化应用程序以支持多核处理器以及其他对称多处理系统。它是一个在线程池模式的基础上执行的并发任务。在 M">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/511196/201701/511196-20170111164237931-1818878873.png">
+<meta property="og:updated_time" content="2018-09-20T13:55:08.772Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="多线程之GCD">
+<meta name="twitter:description" content="本文详细介绍了GCD在iOS中的使用，主要包括以下几个方面  GCD 简介 GCD优点 GCD基础概念 GCD 的使用步骤 GCD 组合方式 GCD 常用方法总结  GCD 简介 Grand Central Dispatch(GCD) 是 Apple 开发的一个多核编程的较新的解决方法。它主要用于优化应用程序以支持多核处理器以及其他对称多处理系统。它是一个在线程池模式的基础上执行的并发任务。在 M">
+<meta name="twitter:image" content="https://images2015.cnblogs.com/blog/511196/201701/511196-20170111164237931-1818878873.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/20/多线程之GCD/"/>
+
+
+
+
+
+  <title>多线程之GCD | Richard-zhang-iOS的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Richard-zhang-iOS的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/20/多线程之GCD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Richard-zhang-iOS">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Richard-zhang-iOS的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">多线程之GCD</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-20T21:14:30+08:00">
+                2018-09-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文详细介绍了GCD在iOS中的使用，主要包括以下几个方面</p>
+<ul>
+<li>GCD 简介</li>
+<li>GCD优点</li>
+<li>GCD基础概念</li>
+<li>GCD 的使用步骤</li>
+<li>GCD 组合方式</li>
+<li>GCD 常用方法总结</li>
+</ul>
+<h2 id="GCD-简介"><a href="#GCD-简介" class="headerlink" title="GCD 简介"></a>GCD 简介</h2><blockquote>
+<p><strong>Grand Central Dispatch(GCD)</strong> 是 Apple 开发的一个多核编程的较新的解决方法。它主要用于优化应用程序以支持多核处理器以及其他对称多处理系统。它是一个在线程池模式的基础上执行的并发任务。在 Mac OS X 10.6 雪豹中首次推出，也可在 iOS 4 及以上版本使用。</p>
+</blockquote>
+<h2 id="GCD优点"><a href="#GCD优点" class="headerlink" title="GCD优点"></a>GCD优点</h2><ul>
+<li>GCD 可用于多核的并行运算</li>
+<li>GCD 会自动利用更多的 CPU 内核（比如双核、四核）</li>
+<li>GCD 会自动管理线程的生命周期（创建线程、调度任务、销毁线程）</li>
+<li>程序员只需要告诉 GCD 想要执行什么任务，不需要编写任何线程管理代码</li>
+</ul>
+<a id="more"></a>
+<h2 id="GCD基础概念"><a href="#GCD基础概念" class="headerlink" title="GCD基础概念"></a>GCD基础概念</h2><p>为了不重复编写我专门写了一篇介绍<a href="">基础概念</a>文章详细介绍了多线程编程中的一些概念，如同步/异步、串行/并行、队列/线程/任务、进程/线程等，请了解相关概念后继续阅读。</p>
+<h2 id="GCD-的使用步骤"><a href="#GCD-的使用步骤" class="headerlink" title="GCD 的使用步骤"></a>GCD 的使用步骤</h2><p>GCD 的使用步骤其实很简单，只有两步。</p>
+<ol>
+<li>创建一个队列（串行队列或并发队列）</li>
+<li>将任务追加到任务的等待队列中，然后系统就会根据任务类型执行任务（同步执行或异步执行）</li>
+</ol>
+<h3 id="队列的创建方法"><a href="#队列的创建方法" class="headerlink" title="队列的创建方法"></a>队列的创建方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 串行队列的创建方法</span><br><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;net.bujige.testQueue&quot;, DISPATCH_QUEUE_SERIAL);</span><br><span class="line">// 并发队列的创建方法</span><br><span class="line">dispatch_queue_t queue = dispatch_queue_create(&quot;net.bujige.testQueue&quot;, DISPATCH_QUEUE_CONCURRENT);</span><br><span class="line">// 主队列的获取方法，串行</span><br><span class="line">dispatch_queue_t queue = dispatch_get_main_queue();</span><br><span class="line">// 全局并发队列的获取方法</span><br><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br></pre></td></tr></table></figure>
+<h3 id="任务的创建方法"><a href="#任务的创建方法" class="headerlink" title="任务的创建方法"></a>任务的创建方法</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 同步执行任务创建方法</span><br><span class="line">dispatch_sync(queue, ^&#123;</span><br><span class="line">    // 这里放同步执行任务代码</span><br><span class="line">&#125;);</span><br><span class="line">// 异步执行任务创建方法</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    // 这里放异步执行任务代码</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="GCD-组合方式"><a href="#GCD-组合方式" class="headerlink" title="GCD 组合方式"></a>GCD 组合方式</h2><ul>
+<li>异步 + 串行</li>
+<li>异步 + 并发</li>
+<li>同步 + 串行（很少使用、可能死锁）</li>
+<li>同步 + 并发（很少使用）</li>
+</ul>
+<p><strong>结论：同步执行没有开启新线程的能力, 所有的任务都只能在当前线程执行</strong></p>
+<p><strong>异步执行有开启新线程的能力, 但是, 有开启新线程的能力, 也不一定会利用这种能力, 也就是说, 异步执行是否开启新线程, 需要具体问题具体分析</strong></p>
+<p>具体组合的实践代码我在<a href="">另外一篇</a>文章有详细介绍，本篇将这部分跳过。</p>
+<h2 id="GCD其他函数用法"><a href="#GCD其他函数用法" class="headerlink" title="GCD其他函数用法"></a>GCD其他函数用法</h2><h3 id="dispatch-after"><a href="#dispatch-after" class="headerlink" title="dispatch_after"></a>dispatch_after</h3><p>该函数用于任务延时执行，具体使用方法如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-(void)GCDDelay&#123;</span><br><span class="line">    //主队列延时</span><br><span class="line">    dispatch_time_t when_main = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3.0 * NSEC_PER_SEC));</span><br><span class="line">    dispatch_after(when_main, dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        NSLog(@&quot;main_%@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    //全局队列延时</span><br><span class="line">    dispatch_time_t when_global = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(4.0 * NSEC_PER_SEC));</span><br><span class="line">    dispatch_after(when_global, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^&#123;</span><br><span class="line">        NSLog(@&quot;global_%@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">    //自定义队列延时</span><br><span class="line">    dispatch_time_t when_custom = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC));</span><br><span class="line">    dispatch_after(when_custom, self.serialQueue, ^&#123;</span><br><span class="line">        NSLog(@&quot;custom_%@&quot;,[NSThread currentThread]);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="dispatch-once"><a href="#dispatch-once" class="headerlink" title="dispatch_once"></a>dispatch_once</h3><p> 保证函数在整个生命周期内只会执行一次，使用方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+ (id)sharedInstance &#123;</span><br><span class="line">    static TestClass *sharedInstance;</span><br><span class="line">    static dispatch_once_t onceToken;   // typedef long dispatch_once_t;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        sharedInstance = [[self alloc] init];</span><br><span class="line">    &#125;);</span><br><span class="line">    return sharedInstance;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="dispatch-group"><a href="#dispatch-group" class="headerlink" title="dispatch_group"></a>dispatch_group</h3><h4 id="dispatch-group-create"><a href="#dispatch-group-create" class="headerlink" title="dispatch_group_create"></a>dispatch_group_create</h4><p>用于创建任务组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_t dispatch_group_create(void);</span><br></pre></td></tr></table></figure>
+<h4 id="dispatch-group-async"><a href="#dispatch-group-async" class="headerlink" title="dispatch_group_async"></a>dispatch_group_async</h4><p>把异步任务提交到指定任务组和指定下拿出队列执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_group_async(dispatch_group_t group,</span><br><span class="line">                          dispatch_queue_t queue,</span><br><span class="line">                          dispatch_block_t block);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>group ——对应的任务组，之后可以通过<code>dispatch_group_wait</code>或者<code>dispatch_group_notify</code>监听任务组内任务的执行情况</li>
+<li>queue ——block任务执行的线程队列，任务组内不同任务的队列可以不同</li>
+<li>block —— 执行任务的block</li>
+</ul>
+<h4 id="dispatch-group-enter"><a href="#dispatch-group-enter" class="headerlink" title="dispatch_group_enter"></a>dispatch_group_enter</h4><p>用于添加对应任务组中的未执行完毕的任务数，执行一次，未执行完毕的任务数加1，当未执行完毕任务数为0的时候，才会使<code>dispatch_group_wait</code>解除阻塞和<code>dispatch_group_notify</code>的block执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_group_enter(dispatch_group_t group);</span><br></pre></td></tr></table></figure>
+<h4 id="dispatch-group-leave"><a href="#dispatch-group-leave" class="headerlink" title="dispatch_group_leave"></a>dispatch_group_leave</h4><p>用于减少任务组中的未执行完毕的任务数，执行一次，未执行完毕的任务数减1，<code>dispatch_group_enter</code>和<code>dispatch_group_leave</code>要匹配，不然系统会认为group任务没有执行完毕</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_group_leave(dispatch_group_t group);</span><br></pre></td></tr></table></figure>
+<h4 id="dispatch-group-wait"><a href="#dispatch-group-wait" class="headerlink" title="dispatch_group_wait"></a>dispatch_group_wait</h4><p>等待组任务完成，会阻塞当前线程，当任务组执行完毕时，才会解除阻塞当前线程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">long dispatch_group_wait(dispatch_group_t group, </span><br><span class="line">                         dispatch_time_t timeout);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>group ——需要等待的任务组</li>
+<li>timeout ——等待的超时时间（即等多久），单位为dispatch_time_t。如果设置为<code>DISPATCH_TIME_FOREVER</code>,则会一直等待（阻塞当前线程），直到任务组执行完毕</li>
+</ul>
+<h4 id="dispatch-group-notify"><a href="#dispatch-group-notify" class="headerlink" title="dispatch_group_notify"></a>dispatch_group_notify</h4><p>待任务组执行完毕时调用，不会阻塞当前线程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">void dispatch_group_notify(dispatch_group_t group,</span><br><span class="line">                           dispatch_queue_t queue, </span><br><span class="line">                           dispatch_block_t block);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>group ——需要监听的任务组</li>
+<li>queue ——block任务执行的线程队列，和之前group执行的线程队列无关</li>
+<li>block ——任务组执行完毕时需要执行的任务block</li>
+</ul>
+<p>以下代码简单演示group的使用方法，并测试group中嵌套异步代码存在的问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_t group = dispatch_group_create();</span><br><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">NSLog(@&quot;group one start&quot;);</span><br><span class="line">dispatch_group_async(group, queue, ^&#123;</span><br><span class="line">    dispatch_async(queue, ^&#123;</span><br><span class="line">        sleep(1); //这里线程睡眠1秒钟，模拟异步请求</span><br><span class="line">        NSLog(@&quot;group one finish&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_notify(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;group finished&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>控制台输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2016-09-25 09:28:28.716 group one start</span><br><span class="line">2016-09-25 09:28:28.717 group finished</span><br><span class="line">2016-09-25 09:28:29.717 group one finish</span><br></pre></td></tr></table></figure>
+<p><strong>从打印结果可以看出，在group中嵌套了一个异步任务时，group并没有等待group内的异步任务执行完毕才进入dispatch_group_notify中，这是因为，在dispatch_group_async中又启了一个异步线程，而异步线程是直接返回的，所以group就认为是执行完毕了。</strong></p>
+<p>对于以上这种情形，解决方案是使用<code>dispatch_group_enter</code>和<code>dispatch_group_leave</code>方法来告知group组内任务何时才是真正的结束。代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_t group = dispatch_group_create();</span><br><span class="line">dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">NSLog(@&quot;group one start&quot;);</span><br><span class="line">dispatch_group_enter(group);</span><br><span class="line">dispatch_async(queue, ^&#123;</span><br><span class="line">    sleep(1); //这里线程睡眠1秒钟，模拟异步请求</span><br><span class="line">    NSLog(@&quot;group one finish&quot;);</span><br><span class="line">    dispatch_group_leave(group);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dispatch_group_notify(group, queue, ^&#123;</span><br><span class="line">    NSLog(@&quot;group finished&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>控制台输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2016-09-25 09:34:07.672 group one start</span><br><span class="line">2016-09-25 09:34:08.677 group one finish</span><br><span class="line">2016-09-25 09:34:08.678 group finished</span><br></pre></td></tr></table></figure>
+<p>以上代码，通过<code>dispatch_group_enter</code>告知group，一个任务开始，未执行完毕任务数加1，在异步线程任务执行完毕时，通过<code>dispatch_group_leave</code>告知group，一个任务结束，未执行完毕任务数减1，当未执行完毕任务数为0的时候，这时group才认为组内任务都执行完毕了（这个和GCD的信号量的机制有些相似），这时候才会回调<code>dispatch_group_notify</code>中的block。</p>
+<h4 id="dispatch-barrier-async"><a href="#dispatch-barrier-async" class="headerlink" title="dispatch_barrier_async"></a>dispatch_barrier_async</h4><p>栅栏函数，使用此方法创建的任务，会查找当前队列中有没有其他任务要执行，如果有，则等待已有任务执行完毕后再执行，同时，在此任务之后进入队列的任务，需要等待此任务执行完成后，才能执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">-(void)GCDbarrier&#123;</span><br><span class="line">    dispatch_async(self.concurrentQueue, ^&#123;</span><br><span class="line">        NSLog(@&quot;任务1&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_async(self.concurrentQueue, ^&#123;</span><br><span class="line">        NSLog(@&quot;任务2&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    dispatch_barrier_async(self.concurrentQueue, ^&#123;</span><br><span class="line">        NSLog(@&quot;任务barrier&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">//    NSLog(@&quot;big&quot;);</span><br><span class="line">    dispatch_async(self.concurrentQueue, ^&#123;</span><br><span class="line">        NSLog(@&quot;任务3&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">//    NSLog(@&quot;apple&quot;);</span><br><span class="line">    dispatch_async(self.concurrentQueue, ^&#123;</span><br><span class="line">        NSLog(@&quot;任务4&quot;);</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ThreadDemo[1833:678739] 任务2</span><br><span class="line">ThreadDemo[1833:678740] 任务1</span><br><span class="line">ThreadDemo[1833:678740] 任务barrier</span><br><span class="line">ThreadDemo[1833:678740] 任务3</span><br><span class="line">ThreadDemo[1833:678739] 任务4</span><br></pre></td></tr></table></figure>
+<h4 id="dispatch-apply"><a href="#dispatch-apply" class="headerlink" title="dispatch_apply"></a>dispatch_apply</h4><p>该函数用于重复执行某个任务，如果任务队列是并行队列，重复执行的任务会并发执行，如果任务队列为串行队列，则任务会顺序执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//串行队列</span><br><span class="line">dispatch_apply(5, self.serialQueue, ^(size_t i) &#123;</span><br><span class="line">       NSLog(@&quot;第%@次_%@&quot;,@(i),[NSThread currentThread]);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">//并行队列</span><br><span class="line">dispatch_apply(5, self.concurrentQueue, ^(size_t i) &#123;</span><br><span class="line">       NSLog(@&quot;第%@次_%@&quot;,@(i),[NSThread currentThread]);</span><br><span class="line"> &#125;);</span><br></pre></td></tr></table></figure>
+<p>信号量主要有3个函数，分别是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//创建信号量，参数：信号量的初值，如果小于0则会返回NULL</span><br><span class="line">dispatch_semaphore_create（信号量值）</span><br><span class="line">//等待降低信号量</span><br><span class="line">dispatch_semaphore_wait（信号量，等待时间）</span><br><span class="line">//提高信号量</span><br><span class="line">dispatch_semaphore_signal(信号量)</span><br></pre></td></tr></table></figure>
+<p>正常的使用顺序是<strong>先降低</strong>然后<strong>再提高</strong>，这两个函数通常成对使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">-(void)dispatchSignal&#123;</span><br><span class="line">    //crate的value表示，最多几个资源可访问</span><br><span class="line">    dispatch_semaphore_t semaphore = dispatch_semaphore_create(2);   </span><br><span class="line">    dispatch_queue_t quene =      dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);</span><br><span class="line">     </span><br><span class="line">    //任务1</span><br><span class="line">    dispatch_async(quene, ^&#123;</span><br><span class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">        NSLog(@&quot;run task 1&quot;);</span><br><span class="line">        sleep(1);</span><br><span class="line">        NSLog(@&quot;complete task 1&quot;);</span><br><span class="line">        dispatch_semaphore_signal(semaphore);       </span><br><span class="line">    &#125;);&lt;br&gt;</span><br><span class="line">    //任务2</span><br><span class="line">    dispatch_async(quene, ^&#123;</span><br><span class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">        NSLog(@&quot;run task 2&quot;);</span><br><span class="line">        sleep(1);</span><br><span class="line">        NSLog(@&quot;complete task 2&quot;);</span><br><span class="line">        dispatch_semaphore_signal(semaphore);       </span><br><span class="line">    &#125;);&lt;br&gt;</span><br><span class="line">    //任务3</span><br><span class="line">    dispatch_async(quene, ^&#123;</span><br><span class="line">        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);</span><br><span class="line">        NSLog(@&quot;run task 3&quot;);</span><br><span class="line">        sleep(1);</span><br><span class="line">        NSLog(@&quot;complete task 3&quot;);</span><br><span class="line">        dispatch_semaphore_signal(semaphore);       </span><br><span class="line">    &#125;);   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<p><img src="https://images2015.cnblogs.com/blog/511196/201701/511196-20170111164237931-1818878873.png" alt="img">　　</p>
+<p>总结：由于设定的信号值为2，先执行两个线程，等执行完一个，才会继续执行下一个，保证同一时间执行的线程数不超过2。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/多线程/" rel="tag"># 多线程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/18/多线程之基础概念 /" rel="next" title="多线程之基础概念">
+                <i class="fa fa-chevron-left"></i> 多线程之基础概念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/09/20/多线程之NSOperation/" rel="prev" title="多线程之NSOperation">
+                多线程之NSOperation <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Richard-zhang-iOS" />
+            
+              <p class="site-author-name" itemprop="name">Richard-zhang-iOS</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Richard-zhang-iOS" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zyqzhangyanqiang@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD-简介"><span class="nav-number">1.</span> <span class="nav-text">GCD 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD优点"><span class="nav-number">2.</span> <span class="nav-text">GCD优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD基础概念"><span class="nav-number">3.</span> <span class="nav-text">GCD基础概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD-的使用步骤"><span class="nav-number">4.</span> <span class="nav-text">GCD 的使用步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#队列的创建方法"><span class="nav-number">4.1.</span> <span class="nav-text">队列的创建方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#任务的创建方法"><span class="nav-number">4.2.</span> <span class="nav-text">任务的创建方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD-组合方式"><span class="nav-number">5.</span> <span class="nav-text">GCD 组合方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCD其他函数用法"><span class="nav-number">6.</span> <span class="nav-text">GCD其他函数用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#dispatch-after"><span class="nav-number">6.1.</span> <span class="nav-text">dispatch_after</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dispatch-once"><span class="nav-number">6.2.</span> <span class="nav-text">dispatch_once</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dispatch-group"><span class="nav-number">6.3.</span> <span class="nav-text">dispatch_group</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-create"><span class="nav-number">6.3.1.</span> <span class="nav-text">dispatch_group_create</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-async"><span class="nav-number">6.3.2.</span> <span class="nav-text">dispatch_group_async</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-enter"><span class="nav-number">6.3.3.</span> <span class="nav-text">dispatch_group_enter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-leave"><span class="nav-number">6.3.4.</span> <span class="nav-text">dispatch_group_leave</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-wait"><span class="nav-number">6.3.5.</span> <span class="nav-text">dispatch_group_wait</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-group-notify"><span class="nav-number">6.3.6.</span> <span class="nav-text">dispatch_group_notify</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-barrier-async"><span class="nav-number">6.3.7.</span> <span class="nav-text">dispatch_barrier_async</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#dispatch-apply"><span class="nav-number">6.3.8.</span> <span class="nav-text">dispatch_apply</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Richard-zhang-iOS</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
