@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="内存," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文主要以下几个方面详细介绍了iOS中所涉及的内存管理相关的机制  数据结构中的堆和栈 内存分配中的堆和栈 引用计数介绍 MRC详解 ARC详解 内存泄漏及检测">
+<meta name="keywords" content="内存">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS之内存管理">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/23/iOS之内存管理/index.html">
+<meta property="og:site_name" content="Richard-zhang-iOS的博客">
+<meta property="og:description" content="本文主要以下几个方面详细介绍了iOS中所涉及的内存管理相关的机制  数据结构中的堆和栈 内存分配中的堆和栈 引用计数介绍 MRC详解 ARC详解 内存泄漏及检测">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/3/30/16277792749e0937?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-a8c2181c469689a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-4965bcaf3749ddb7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-a5f25dd4c7a81260.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/3/30/16277792a5c7cbfe?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-44a7bd5fad885e51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-87c4982ef025d1bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-09-23T10:55:45.648Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS之内存管理">
+<meta name="twitter:description" content="本文主要以下几个方面详细介绍了iOS中所涉及的内存管理相关的机制  数据结构中的堆和栈 内存分配中的堆和栈 引用计数介绍 MRC详解 ARC详解 内存泄漏及检测">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/3/30/16277792749e0937?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/23/iOS之内存管理/"/>
+
+
+
+
+
+  <title>iOS之内存管理 | Richard-zhang-iOS的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Richard-zhang-iOS的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/23/iOS之内存管理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Richard-zhang-iOS">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Richard-zhang-iOS的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS之内存管理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-23T18:47:31+08:00">
+                2018-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要以下几个方面详细介绍了iOS中所涉及的内存管理相关的机制</p>
+<ul>
+<li>数据结构中的堆和栈</li>
+<li>内存分配中的堆和栈</li>
+<li>引用计数介绍</li>
+<li>MRC详解</li>
+<li>ARC详解</li>
+<li>内存泄漏及检测</li>
+</ul>
+<a id="more"></a>
+<h3 id="Heap-堆-和stack-栈"><a href="#Heap-堆-和stack-栈" class="headerlink" title="Heap(堆)和stack(栈)"></a>Heap(堆)和stack(栈)</h3><h4 id="堆是什么"><a href="#堆是什么" class="headerlink" title="堆是什么"></a>堆是什么</h4><blockquote>
+<p>引自维基百科<a href="https://link.juejin.im/?target=https%3A%2F%2Fzh.wikipedia.org%2Fwiki%2F%25E5%25A0%2586_(%25E6%2595%25B0%25E6%258D%25AE%25E7%25BB%2593%25E6%259E%2584" target="_blank" rel="noopener">堆</a>)（英语：Heap）是计算机科学中一类特殊的数据结构的统称。堆通常是一个可以被看做一棵树的数组对象。在队列中，调度程序反复提取队列中第一个作业并运行，因为实际情况中某些时间较短的任务将等待很长时间才能结束，或者某些不短小，但具有重要性的作业，同样应当具有优先权。堆即为解决此类问题设计的一种数据结构。</p>
+</blockquote>
+<blockquote>
+<p>堆(Heap)又被为优先队列(priority queue)。尽管名为优先队列，但堆并不是队列。回忆一下，在队列中，我们可以进行的限定操作是dequeue和enqueue。dequeue是按照进入队列的先后顺序来取出元素。而在堆中，我们不是按照元素进入队列的先后顺序取出元素的，而是按照元素的优先级取出元素。</p>
+</blockquote>
+<p>这就好像候机的时候，无论谁先到达候机厅，总是头等舱的乘客先登机，然后是商务舱的乘客，最后是经济舱的乘客。每个乘客都有头等舱、商务舱、经济舱三种个键值(key)中的一个。头等舱-&gt;商务舱-&gt;经济舱依次享有从高到低的优先级。</p>
+<p>总的来说，堆是一种数据结构，数据的插入和删除是根据优先级定的，他有几个特性：</p>
+<ul>
+<li>任意节点的优先级不小于它的子节点</li>
+<li>每个节点值都小于或等于它的子节点</li>
+<li>主要操作是插入和删除最小元素(元素值本身为优先级键值，小元素享有高优先级)</li>
+</ul>
+<p>举个例子，就像叠罗汉，体重大(优先级低、值大)的站在最下面，体重小的站在最上面(优先级高，值小)。 为了让堆稳固，我们每次都让最上面的参与者退出堆，<strong>也就是每次取出优先级最高的元素</strong>。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/3/30/16277792749e0937?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<h4 id="栈是什么"><a href="#栈是什么" class="headerlink" title="栈是什么"></a>栈是什么</h4><blockquote>
+<p>引自维基百科<a href="https://link.juejin.im/?target=https%3A%2F%2Fzh.wikipedia.org%2Fwiki%2F%25E5%25A0%2586%25E6%25A0%2588" target="_blank" rel="noopener">栈</a>是计算机科学中一种特殊的串列形式的抽象资料型别，其特殊之处在于只能允许在链接串列或阵列的一端（称为堆叠顶端指标，英语：top）进行加入数据（英语：push）和输出数据（英语：pop）的运算。另外栈也可以用一维数组或连结串列的形式来完成。堆叠的另外一个相对的操作方式称为伫列。 由于堆叠数据结构只允许在一端进行操作，因而按照后进先出（LIFO, Last In First Out）的原理运作。</p>
+</blockquote>
+<p>举个例子，一把54式手枪的子弹夹，你往里面装子弹，最先射击出来的子弹肯定是最后装进去的那一个。 这就是栈的结构，后进先出。</p>
+<p>栈中的每个元素称为一个<code>frame</code>。而最上层元素称为<code>top frame</code>。<strong>栈只支持三个操作， pop, top, push。</strong></p>
+<ul>
+<li>pop取出栈中最上层元素(8)，栈的最上层元素变为早先进入的元素(9)。</li>
+<li>top查看栈的最上层元素(8)。</li>
+<li>push将一个新的元素(5)放在栈的最上层。</li>
+</ul>
+<p>栈不支持其他操作。如果想取出元素12, 必须进行3次<code>pop</code>操作。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/301129-a8c2181c469689a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img"></p>
+<h4 id="内存分配中的栈和堆"><a href="#内存分配中的栈和堆" class="headerlink" title="内存分配中的栈和堆"></a>内存分配中的栈和堆</h4><p>内存分为5个区域，分别指的是—–&gt;栈区/堆区/BSS段/数据段/代码段</p>
+<p><strong>栈：</strong>存储局部变量，当其作用域执行完毕之后，就会被系统立即收回</p>
+<p><strong>堆：</strong>存储OC对象，手动申请的字节空间，需要调用free来释放</p>
+<p><strong>BSS段：</strong>未初始化的全局变量和静态变量，一旦初始化就会从BSS段中回收掉，转存到数据段中</p>
+<p><strong>数据段：</strong>存储已经初始化的全局变量和静态变量，以及常量数据，直到结束程序时才会被立即收回</p>
+<p><strong>代码段：</strong>代码，直到结束程序时才会被立即收回</p>
+<p>堆栈空间分配</p>
+<blockquote>
+<p>栈（操作系统）：由操作系统自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。 堆（操作系统）： 一般由程序员分配释放， 若程序员不释放，程序结束时可能由OS回收，分配方式倒是类似于链表。</p>
+</blockquote>
+<p>堆栈缓存方式</p>
+<blockquote>
+<p>栈使用的是一级缓存， 他们通常都是被调用时处于存储空间中，调用完毕立即释放。 堆则是存放在二级缓存中，生命周期由虚拟机的垃圾回收算法来决定（并不是一旦成为孤儿对象就能被回收）。所以调用这些对象的速度要相对来得低一些。</p>
+</blockquote>
+<p>一般情况下程序存放在<code>Rom</code>（只读内存，比如硬盘）或<code>Flash</code>中，运行时需要拷到<code>RAM</code>（随机存储器RAM）中执行，<code>RAM</code>会分别存储不同的信息，如下图所示：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/301129-4965bcaf3749ddb7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img"></p>
+<p>内存中的栈区处于相对较高的地址以地址的增长方向为上的话，栈地址是向下增长的。</p>
+<p>栈中分配局部变量空间，堆区是向上增长的用于分配程序员申请的内存空间。另外还有静态区是分配静态变量，全局变量空间的；只读区是分配常量和程序代码空间的；以及其他一些分区。</p>
+<p>也就是说，在<code>iOS</code>中，我们的值类型是放在栈空间的，内存分配和回收不需要我们关系，系统会帮我处理。在堆空间的对象类型就要有程序员自己分配，自己释放了。</p>
+<h3 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h3><h4 id="引用计数是什么"><a href="#引用计数是什么" class="headerlink" title="引用计数是什么"></a>引用计数是什么</h4><blockquote>
+<p>引自维基百科<a href="https://link.juejin.im/?target=https%3A%2F%2Fzh.wikipedia.org%2Fwiki%2F%25E5%25BC%2595%25E7%2594%25A8%25E8%25AE%25A1%25E6%2595%25B0" target="_blank" rel="noopener">引用计数</a>是计算机编程语言中的一种内存管理技术，是指将资源（可以是对象、内存或磁盘空间等等）的被引用次数保存起来，当被引用次数变为零时就将其释放的过程。使用引用计数技术可以实现自动资源管理的目的。同时引用计数还可以指使用引用计数技术回收未使用资源的垃圾回收算法。 当创建一个对象的实例并在堆上申请内存时，对象的引用计数就为1，在其他对象中需要持有这个对象时，就需要把该对象的引用计数加1，需要释放一个对象时，就将该对象的引用计数减1，直至对象的引用计数为0，对象的内存会被立刻释放。</p>
+</blockquote>
+<p>正常情况下，当一段代码需要访问某个对象时，该对象的引用的计数加1；当这段代码不再访问该对象时，该对象的引用计数减1，表示这段代码不再访问该对象；当对象的引用计数为0时，表明程序已经不再需要该对象，系统就会回收该对象所占用的内存。</p>
+<ul>
+<li>当程序调用方法名以<code>alloc</code>、<code>new</code>、<code>copy</code>、<code>mutableCopy</code>开头的方法来创建对象时，该对象的引用计数加<code>1</code>。</li>
+<li>程序调用对象的<code>retain</code>方法时，该对象的引用计数加<code>1</code>。</li>
+<li>程序调用对象的<code>release</code>方法时，该对象的引用计数减<code>1</code>。</li>
+</ul>
+<p><code>NSObject</code> 中提供了有关引用计数的如下方法：</p>
+<ul>
+<li>—<code>retain</code>：将该对象的引用计数器加<code>1</code>。</li>
+<li>—<code>release</code>：将该对象的引用计数器减<code>1</code>。</li>
+<li>—<code>autorelease</code>：不改变该对象的引用计数器的值，只是将对象添加到自动释放池中。</li>
+<li>—<code>retainCount</code>：返回该对象的引用计数的值。</li>
+</ul>
+<h4 id="引用计数内存管理的思考方式"><a href="#引用计数内存管理的思考方式" class="headerlink" title="引用计数内存管理的思考方式"></a>引用计数内存管理的思考方式</h4><p>看到“引用计数”这个名称，我们便会不自觉地联想到“某处有某物多少多少”而将注意力放到计数上。但其实，更加客观、正确的思考方式：</p>
+<ul>
+<li>自己生成的对象，自己持有。</li>
+<li>非自己生成的对象，自己也能持有。</li>
+<li>不再需要自己持有的对象时释放。</li>
+<li>非自己持有的对象无法释放。</li>
+</ul>
+<p>引用计数式内存管理的思考方式仅此而已。按照这个思路，完全不必考虑引用计数。 上文出现了“生成”、“持有”、“释放”三个词。而在<code>Objective-C</code>内存管理中还要加上“废弃”一词。各个词标书的<code>Objective-C</code>方法如下表。</p>
+<table>
+<thead>
+<tr>
+<th>对象操作</th>
+<th>Objective-C方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>生成并持有对象</td>
+<td>alloc/new/copy/mutableCopy等方法</td>
+</tr>
+<tr>
+<td>持有对象</td>
+<td>retain方法</td>
+</tr>
+<tr>
+<td>释放对象</td>
+<td>release方法</td>
+</tr>
+<tr>
+<td>废弃对象</td>
+<td>dealloc方法</td>
+</tr>
+</tbody>
+</table>
+<p>这些有关<code>Objective-C</code>内存管理的方法，实际上不包括在该语言中，而是包含在Cocoa框架中用于<code>macOS</code>、<code>iOS</code>应用开发。<code>Cocoa</code>框架中<code>Foundation</code>框架类库的<code>NSObject</code>类担负内存管理的职责。<code>Objective-C</code>内存管理中的<code>alloc/retain/release/dealloc</code>方法分别指代<code>NSObject</code>类的<code>alloc</code>类方法、<code>retain</code>实例方法、<code>release</code>实例方法和<code>dealloc</code>实例方法。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/301129-a5f25dd4c7a81260.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img"></p>
+<p>Cocoa框架、Foundation框架和NSObject类的关系</p>
+<h3 id="MRC-手动管理引用计数"><a href="#MRC-手动管理引用计数" class="headerlink" title="MRC(手动管理引用计数)"></a>MRC(手动管理引用计数)</h3><p>顾名思义，<code>MRC</code>就是调用<code>Objective-C</code>的方法(<code>alloc/new/copy/mutableCopy/retain/release</code>等)实现引用计数的增加和减少。</p>
+<p>下面通过<code>Objective-C</code>的方法实现内存管理的思考方式。</p>
+<h4 id="自己生成的对象，自己持有"><a href="#自己生成的对象，自己持有" class="headerlink" title="自己生成的对象，自己持有"></a>自己生成的对象，自己持有</h4><p>使用以下名称开头的方法名意味着自己生成的对象只有自己持有：</p>
+<ul>
+<li>alloc</li>
+<li>new</li>
+<li>copy</li>
+<li>mutableCopy</li>
+</ul>
+<h5 id="alloc的实现"><a href="#alloc的实现" class="headerlink" title="alloc的实现"></a>alloc的实现</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 自己生成并持有对象</span><br><span class="line">id obj = [[NSObject alloc] init];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>使用<code>NSObject</code>类的<code>alloc</code>方法就能自己生成并持有对象。指向生成并持有对象的指针被赋给变量<code>obj</code>。</p>
+<h5 id="new的实现"><a href="#new的实现" class="headerlink" title="new的实现"></a>new的实现</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// 自己生成并持有对象</span><br><span class="line">id obj = [NSObject new];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p><code>[NSObject new]</code>与<code>[[NSObject alloc] init]</code>是完全一致的。</p>
+<h5 id="copy的实现"><a href="#copy的实现" class="headerlink" title="copy的实现"></a>copy的实现</h5><p><code>copy</code>方法利用基于<code>NSCopying</code>方法约定，由各类实现的<code>copyWithZone:</code>方法生成并持有对象的副本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line"></span><br><span class="line">@interface Person: NSObject&lt;NSCopying&gt;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line"></span><br><span class="line">- (id)copyWithZone:(NSZone *)zone &#123;</span><br><span class="line">    Person *obj = [[[self class] allocWithZone:zone] init];</span><br><span class="line">    obj.name = self.name;</span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view, typically from a nib.</span><br><span class="line">    //alloc生成并持有对象</span><br><span class="line">    Person *p = [[Person alloc] init];</span><br><span class="line">    p.name = @&quot;testname&quot;;</span><br><span class="line">    </span><br><span class="line">    //copy生成并持有对象</span><br><span class="line">    id obj = [p copy];</span><br><span class="line">    </span><br><span class="line">    //打印对象</span><br><span class="line">    NSLog(@&quot;p对象%@&quot;, p);</span><br><span class="line">    NSLog(@&quot;obj对象%@&quot;, obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-28 23:01:32.321661+0800 ocram[4466:1696414] p对象&lt;Person: 0x1c0003320&gt; 2018-03-28 23:01:32.321778+0800 ocram[4466:1696414] obj对象&lt;Person: 0x1c0003370&gt;</p>
+</blockquote>
+<p>从打印可以看到<code>obj</code>是<code>p</code>对象的副本。两者的引用计数都是<code>1</code>。</p>
+<blockquote>
+<p>说明：在<code>- (id)copyWithZone:(NSZone *)zone</code>方法中，一定要通过<code>[self class]</code>方法返回的对象调用<code>allocWithZone:</code>方法。因为指针可能实际指向的是<code>Person</code>的子类。这种情况下，通过调用<code>[self class]</code>，就可以返回正确的类的类型对象。</p>
+</blockquote>
+<h5 id="mutableCopy的实现"><a href="#mutableCopy的实现" class="headerlink" title="mutableCopy的实现"></a>mutableCopy的实现</h5><p>与<code>copy</code>方法类似，<code>mutableCopy</code>方法利用基于<code>NSMutableCopying</code>方法约定，由各类实现的<code>mutableCopyWithZone:</code>方法生成并持有对象的副本。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line"></span><br><span class="line">@interface Person: NSObject&lt;NSMutableCopying&gt;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) NSString *name;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line"></span><br><span class="line">- (id)mutableCopyWithZone:(NSZone *)zone &#123;</span><br><span class="line">    Person *obj = [[[self class] allocWithZone:zone] init];</span><br><span class="line">    obj.name = self.name;</span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view, typically from a nib.</span><br><span class="line">    //alloc生成并持有对象</span><br><span class="line">    Person *p = [[Person alloc] init];</span><br><span class="line">    p.name = @&quot;testname&quot;;</span><br><span class="line">    </span><br><span class="line">    //copy生成并持有对象</span><br><span class="line">    id obj = [p mutableCopy];</span><br><span class="line">    </span><br><span class="line">    //打印对象</span><br><span class="line">    NSLog(@&quot;p对象%@&quot;, p);</span><br><span class="line">    NSLog(@&quot;obj对象%@&quot;, obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-28 23:08:17.382538+0800 ocram[4476:1699096] p对象&lt;Person: 0x1c4003c20&gt; 2018-03-28 23:08:17.382592+0800 ocram[4476:1699096] obj对象&lt;Person: 0x1c4003d70&gt;</p>
+</blockquote>
+<p>从打印可以看到<code>obj</code>是<code>p</code>对象的副本。两者的引用计数都是<code>1</code>。</p>
+<p><code>copy</code>和<code>mutableCopy</code>的区别在于，<code>copy</code>方法生成不可变更的对象，而<code>mutableCopy</code>方法生成可变更的对象。</p>
+<h5 id="浅拷贝和深拷贝"><a href="#浅拷贝和深拷贝" class="headerlink" title="浅拷贝和深拷贝"></a>浅拷贝和深拷贝</h5><p>既然讲到<code>copy</code>和<code>mutableCopy</code>，那就要谈一下深拷贝和浅拷贝的概念和实践。</p>
+<h6 id="什么是浅拷贝、深拷贝？"><a href="#什么是浅拷贝、深拷贝？" class="headerlink" title="什么是浅拷贝、深拷贝？"></a>什么是浅拷贝、深拷贝？</h6><blockquote>
+<p>简单理解就是，浅拷贝是拷贝了指向对象的指针， 深拷贝不但拷贝了对象的指针，还在系统中再分配一块内存，存放拷贝对象的内容。</p>
+</blockquote>
+<p>浅拷贝：拷贝对象本身,返回一个对象,指向相同的内存地址。 深层复制：拷贝对象本身,返回一个对象,指向不同的内存地址。</p>
+<h6 id="如何判断浅拷贝、深拷贝？"><a href="#如何判断浅拷贝、深拷贝？" class="headerlink" title="如何判断浅拷贝、深拷贝？"></a>如何判断浅拷贝、深拷贝？</h6><blockquote>
+<p>深浅拷贝取决于拷贝后的对象的是不是和被拷贝对象的地址相同，如果不同，则产生了新的对象，则执行的是深拷贝，如果相同，则只是指针拷贝，相当于retain一次原对象, 执行的是浅拷贝。</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/3/30/16277792a5c7cbfe?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p>深拷贝和浅拷贝的判断要注意两点：</p>
+<ul>
+<li>源对象类型是否是可变的</li>
+<li>执行的拷贝是<code>copy</code>还是<code>mutableCopy</code></li>
+</ul>
+<h6 id="浅拷贝深拷贝的实现"><a href="#浅拷贝深拷贝的实现" class="headerlink" title="浅拷贝深拷贝的实现"></a>浅拷贝深拷贝的实现</h6><ul>
+<li>NSArray调用copy方法，浅拷贝</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">id obj = [NSArray array];</span><br><span class="line">id obj1 = [obj copy];</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;obj是%p&quot;, obj);</span><br><span class="line">NSLog(@&quot;obj1是%p&quot;, obj1);</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-29 20:48:56.087197+0800 ocram[5261:2021415] obj是0x1c0003920 2018-03-29 20:48:56.087250+0800 ocram[5261:2021415] obj1是0x1c0003920</p>
+</blockquote>
+<p>指针一样<code>obj</code>是浅拷贝。</p>
+<ul>
+<li>NSArray调用mutableCopy方法，深拷贝</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">id obj = [NSArray array];</span><br><span class="line">id obj1 = [obj mutableCopy];</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;obj是%p&quot;, obj);</span><br><span class="line">NSLog(@&quot;obj1是%p&quot;, obj1);</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-29 20:42:16.508134+0800 ocram[5244:2018710] obj是0x1c00027d0 2018-03-29 20:42:16.508181+0800 ocram[5244:2018710] obj1是0x1c0453bf0</p>
+</blockquote>
+<p>指针不一样<code>obj</code>是深拷贝。</p>
+<ul>
+<li>NSMutableArray调用copy方法，深拷贝</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">id obj = [NSMutableArray array];</span><br><span class="line">id obj1 = [obj copy];</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;obj是%p&quot;, obj);</span><br><span class="line">NSLog(@&quot;obj1是%p&quot;, obj1);</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-29 20:50:36.936054+0800 ocram[5265:2022249] obj是0x1c0443f90 2018-03-29 20:50:36.936097+0800 ocram[5265:2022249] obj1是0x1c0018580</p>
+</blockquote>
+<p>指针不一样<code>obj</code>是深拷贝。</p>
+<ul>
+<li>NSMutableArray调用mutableCopy方法，深拷贝</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">id obj = [NSMutableArray array];</span><br><span class="line">id obj1 = [obj mutableCopy];</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;obj是%p&quot;, obj);</span><br><span class="line">NSLog(@&quot;obj1是%p&quot;, obj1);</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-29 20:52:30.057542+0800 ocram[5268:2023155] obj是0x1c425e6f0 2018-03-29 20:52:30.057633+0800 ocram[5268:2023155] obj1是0x1c425e180</p>
+</blockquote>
+<p>指针不一样<code>obj</code>是深拷贝。</p>
+<ul>
+<li>深拷贝的数组里面的元素依然是浅拷贝</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">id obj = [NSMutableArray arrayWithObject:@&quot;test&quot;];</span><br><span class="line">id obj1 = [obj mutableCopy];</span><br><span class="line"></span><br><span class="line">NSLog(@&quot;obj是%p&quot;, obj);</span><br><span class="line">NSLog(@&quot;obj内容是%p&quot;, obj[0]);</span><br><span class="line">NSLog(@&quot;obj1是%p&quot;, obj1);</span><br><span class="line">NSLog(@&quot;obj1内容是%p&quot;, obj1[0]);</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-29 20:55:18.196597+0800 ocram[5279:2025743] obj是0x1c0255120 2018-03-29 20:55:18.196647+0800 ocram[5279:2025743] obj内容是0x1c02551e0 2018-03-29 20:55:18.196665+0800 ocram[5279:2025743] obj1是0x1c0255210 2018-03-29 20:55:18.196682+0800 ocram[5279:2025743] obj1内容是0x1c02551e0</p>
+</blockquote>
+<p>可以看到<code>obj</code>和<code>obj1</code>虽然指针是不一样的(深拷贝)，但是他们的元素的指针是一样的，<strong>所以数组里的元素依然是浅拷贝</strong>。</p>
+<h5 id="其他实现"><a href="#其他实现" class="headerlink" title="其他实现"></a>其他实现</h5><p>使用上述使用一下名称开头的方法，下面名称也意味着自己生成并持有对象。</p>
+<ul>
+<li>allocMyObject</li>
+<li>newThatObject</li>
+<li>copyThis</li>
+<li>mutableCopyYourObject</li>
+</ul>
+<p>使用驼峰拼写法来命名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">#import &quot;ViewController.h&quot;</span><br><span class="line"></span><br><span class="line">@interface Person: NSObject</span><br><span class="line"></span><br><span class="line">@property (nonatomic, strong) NSString *name;</span><br><span class="line"></span><br><span class="line">+ (id)allocObject;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Person</span><br><span class="line"></span><br><span class="line">+ (id)allocObject &#123;</span><br><span class="line">    //自己生成并持有对象</span><br><span class="line">    id obj = [[Person alloc] init];</span><br><span class="line">    </span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@interface ViewController ()</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation ViewController</span><br><span class="line"></span><br><span class="line">- (void)viewDidLoad &#123;</span><br><span class="line">    [super viewDidLoad];</span><br><span class="line">    // Do any additional setup after loading the view, typically from a nib.</span><br><span class="line">    //取得非自己生成并持有的对象</span><br><span class="line">    Person *p = [Person allocObject];</span><br><span class="line">    p.name = @&quot;testname&quot;;</span><br><span class="line">    </span><br><span class="line">    NSLog(@&quot;p对象%@&quot;, p);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>打印结果： 2018-03-28 23:33:37.044327+0800 ocram[4500:1706677] p对象&lt;Person: 0x1c0013770&gt;</p>
+</blockquote>
+<p><code>allocObject</code>名称符合上面的命名规则，因此它与用<code>alloc</code>方法生成并持有对象的情况完全相同，所以使用<code>allocObject</code>方法也意味着“自己生成并持有对象”。</p>
+<h4 id="非自己生成的对象，自己也能持有"><a href="#非自己生成的对象，自己也能持有" class="headerlink" title="非自己生成的对象，自己也能持有"></a>非自己生成的对象，自己也能持有</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//非自己生成的对象，暂时没有持有</span><br><span class="line">id obj = [NSMutableArray array];</span><br><span class="line"></span><br><span class="line">//通过retain持有对象</span><br><span class="line">[obj retain];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>上述代码中<code>NSMutableArray</code>通过类方法<code>array</code>生成了一个对象赋给变量<code>obj</code>，但变量<code>obj</code>自己并不持有该对象。使用<code>retain</code>方法可以持有对象。</p>
+<h4 id="不再需要自己持有的对象时释放"><a href="#不再需要自己持有的对象时释放" class="headerlink" title="不再需要自己持有的对象时释放"></a>不再需要自己持有的对象时释放</h4><p>自己持有的对象，一旦不再需要，持有者有义务释放该对象。释放使用<code>release</code>方法。</p>
+<h5 id="自己生成并持有对象的释放"><a href="#自己生成并持有对象的释放" class="headerlink" title="自己生成并持有对象的释放"></a>自己生成并持有对象的释放</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 自己生成并持有对象</span><br><span class="line">id obj = [[NSObject alloc] init];</span><br><span class="line"></span><br><span class="line">//释放对象</span><br><span class="line">[obj release];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>如此，用<code>alloc</code>方法由自己生成并持有的对象就通过<code>realse</code>方法释放了。自己生成而非自己所持有的对象，若用<code>retain</code>方法变为自己持有，也同样可以用<code>realse</code>方法释放。</p>
+<h5 id="非自己生成的对象持有对象的释放"><a href="#非自己生成的对象持有对象的释放" class="headerlink" title="非自己生成的对象持有对象的释放"></a>非自己生成的对象持有对象的释放</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//非自己生成的对象，暂时没有持有</span><br><span class="line">id obj = [NSMutableArray array];</span><br><span class="line"></span><br><span class="line">//通过retain持有对象</span><br><span class="line">[obj retain];</span><br><span class="line"></span><br><span class="line">//释放对象</span><br><span class="line">[obj release];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<h5 id="非自己生成的对象本身的释放"><a href="#非自己生成的对象本身的释放" class="headerlink" title="非自己生成的对象本身的释放"></a>非自己生成的对象本身的释放</h5><p>像调用<code>[NSMutableArray array]</code>方法使取得的对象存在，但自己并不持有对象，是如何实现的呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+ (id)array &#123;</span><br><span class="line">    //生成并持有对象</span><br><span class="line">    id obj = [[NSMutableArray alloc] init];</span><br><span class="line">    </span><br><span class="line">    //使用autorelease不持有对象</span><br><span class="line">    [obj autorelease];</span><br><span class="line">    </span><br><span class="line">    //返回对象</span><br><span class="line">    return obj;</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>上例中，我们使用了<code>autorelease</code>方法。用该方法，可以使取得的对象存在，但自己不持有对象。<code>autorelease</code>提供这样的功能，使对象在超出指定的生存范围时能够自动并正确的释放(调用<code>release</code>方法)。</p>
+<p>使用<code>NSMutableArray</code>类的<code>array</code>类方法等可以取得谁都不持有的对象，这些方法都是通过<code>autorelease</code>实现的。根据上文的命名规则，这些用来取得谁都不持有的对象的方法名不能以<code>alloc/new/copy/mutableCopy</code>开头，这点需要注意。</p>
+<h4 id="非自己持有的对象无法释放"><a href="#非自己持有的对象无法释放" class="headerlink" title="非自己持有的对象无法释放"></a>非自己持有的对象无法释放</h4><p>对于用<code>alloc/new/copy/mutableCopy</code>方法生成并持有的对象，或是用<code>retain</code>方法持有的对象，由于持有者是自己，所以在不需要该对象时需要将其释放。而由此以外所得到的对象绝对不能释放。倘若在程序中释放了非自己所持有的对象就会造成崩溃。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 自己生成并持有对象</span><br><span class="line">id obj = [[NSObject alloc] init];</span><br><span class="line"></span><br><span class="line">//释放对象</span><br><span class="line">[obj release];</span><br><span class="line"></span><br><span class="line">//再次释放已经非自己持有的对象，应用程序崩溃</span><br><span class="line">[obj release];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>释放了非自己持有的对象，肯定会导致应用崩溃。因此绝对不要去释放非自己持有的对象。</p>
+<h4 id="autorelease"><a href="#autorelease" class="headerlink" title="autorelease"></a>autorelease</h4><h5 id="autorelease介绍"><a href="#autorelease介绍" class="headerlink" title="autorelease介绍"></a>autorelease介绍</h5><blockquote>
+<p>说到Objective-C内存管理，就不能不提autorelease。 顾名思义，autorelease就是自动释放。这看上去很像ARC，单实际上它更类似于C语言中自动变量（局部变量）的特性。</p>
+</blockquote>
+<p>在C语言中，程序程序执行时，若局部变量超出其作用域，该局部变量将被自动废弃。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    int a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//因为超出变量作用域，代码执行到这里，自动变量`a`被废弃，不可再访问。</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p><code>autorelease</code>会像<code>C</code>语言的局部变量那样来对待对象实例。当其超出作用域时，对象实例的<code>release</code>实例方法被调用。另外，同<code>C</code>语言的局部变量不同的是，编程人员可以设置变量的作用域。</p>
+<p><code>autorelease</code>的具体使用方法如下：</p>
+<ul>
+<li>生成并持有<code>NSAutoreleasePool</code>对象。</li>
+<li>调用已分配对象的<code>autorelease</code>实例方法。</li>
+<li>废弃<code>NSAutoreleasePool</code>对象。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</span><br><span class="line"></span><br><span class="line">id obj = [[NSObject alloc] init];</span><br><span class="line"></span><br><span class="line">[obj autorelease];</span><br><span class="line"></span><br><span class="line">[pool drain];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>上述代码中最后一行的<code>[pool drain]</code>等同于<code>[obj release]</code>。</p>
+<h5 id="autorelease实现"><a href="#autorelease实现" class="headerlink" title="autorelease实现"></a>autorelease实现</h5><p>调用<code>NSObject</code>类的<code>autorelease</code>实例方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[obj autorelease];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>调用<code>autorelease</code>方法的内部实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (id) autorelease &#123;</span><br><span class="line">    [NSAutoreleasePool addObject: self];</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p><code>autorelease</code>实例方法的本质就是调用<code>NSAutoreleasePool</code>对象的<code>addObject</code>类方法。</p>
+<h5 id="autorelease注意"><a href="#autorelease注意" class="headerlink" title="autorelease注意"></a>autorelease注意</h5><p><code>autorelease</code>是<code>NSObject</code>的实例方法，<code>NSAutoreleasePool</code>也是继承<code>NSObject</code>的类。那能不能调用<code>autorelease</code>呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];</span><br><span class="line"></span><br><span class="line">[pool release];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>运行结果发生崩溃。通常在使用<code>Objective-C</code>，也就是<code>Foundation</code>框架时，无论调用哪一个对象的<code>autorelease</code>实例方法，实现上是调用的都是<code>NSObject</code>类的<code>autorelease</code>实例方法。但是对于<code>NSAutoreleasePool</code>类，<code>autorelease</code>实例方法已被该类重载，因此运行时就会出错。</p>
+<h3 id="ARC-自动管理引用计数"><a href="#ARC-自动管理引用计数" class="headerlink" title="ARC(自动管理引用计数)"></a>ARC(自动管理引用计数)</h3><h4 id="ARC介绍"><a href="#ARC介绍" class="headerlink" title="ARC介绍"></a>ARC介绍</h4><blockquote>
+<p>上面讲了“引用计数内存管理的思考方式”的本质部分在ARC中并没有改变。就像“自动引用计数”这个名称表示的那样，ARC只是自动地帮助我们处理“引用计数”的相关部分。</p>
+</blockquote>
+<p>在编译单位上，可设置<code>ARC</code>有效或无效，即设置特定类是否启用<code>ARC</code>。 在<code>Project</code>里面找到<code>Build Phases</code>-<code>Compile Sources</code>，这里是所有你的编译文件。指定编译器属性为<code>-fobjc-arc</code>即为该文件使用<code>ARC</code>，指定编译器属性为<code>-fno-objc-arc</code>即为该文件不使用<code>ARC</code>，如下图所示。</p>
+<p><a href="https://upload-images.jianshu.io/upload_images/301129-44a7bd5fad885e51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="noopener"><img src="https://upload-images.jianshu.io/upload_images/301129-44a7bd5fad885e51.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img"></a></p>
+<p>编译器在编译时会帮我们自动插入，包括 <code>retain</code>、<code>release</code>、<code>copy</code>、<code>autorelease</code>、<code>autoreleasepool</code></p>
+<h4 id="ARC有效的代码实现"><a href="#ARC有效的代码实现" class="headerlink" title="ARC有效的代码实现"></a>ARC有效的代码实现</h4><h5 id="所有权修饰符"><a href="#所有权修饰符" class="headerlink" title="所有权修饰符"></a>所有权修饰符</h5><p>Objective-C编程中为了处理对象，可将变量类型定义为id类型或各种对象类型。 ARC中，id类型和对象类其类型必须附加所有权修饰符。</p>
+<ul>
+<li>__strong修饰符</li>
+<li>__weak修饰符</li>
+<li>__unsafe_unretained修饰符</li>
+<li>__autoreleasing修饰符</li>
+</ul>
+<h6 id="strong修饰符"><a href="#strong修饰符" class="headerlink" title="__strong修饰符"></a>__strong修饰符</h6><p><code>__strong</code>修饰符是<code>id</code>类型和对象类型默认的所有权修饰符。也就是说，不写修饰符的话，默认对象前面被附加了<code>__strong</code>所有权修饰符。</p>
+<h6 id="比如，对于Test-m文件，当源代码如下时："><a href="#比如，对于Test-m文件，当源代码如下时：" class="headerlink" title="比如，对于Test.m文件，当源代码如下时："></a>比如，对于Test.m文件，当源代码如下时：</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> #import &quot;Test.h&quot;</span><br><span class="line"></span><br><span class="line"> @implementation Test</span><br><span class="line"></span><br><span class="line">- (void)testFunction&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        __strong NSObject * temp = [[NSObject alloc] init];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>转换后的汇编代码大概缩减为如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">_objc_msgSend // alloc</span><br><span class="line">_objc_msgSend // init</span><br><span class="line">_objc_storeStrong // 强引用</span><br></pre></td></tr></table></figure>
+<p>在结合Runtime的源码，我们看看最关键的objc_storeStrong的实现</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void objc_storeStrong(id *location, id obj)</span><br><span class="line">&#123;</span><br><span class="line">    id prev = *location;</span><br><span class="line">    if (obj == prev) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    objc_retain(obj);</span><br><span class="line">    *location = obj;</span><br><span class="line">    objc_release(prev);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">id objc_retain(id obj) &#123; return [obj retain]; &#125;</span><br><span class="line">void objc_release(id obj) &#123; [obj release]; &#125;</span><br></pre></td></tr></table></figure>
+<p><code>__strong</code>修饰符的变量<code>obj</code>在超出其变量作用域时，即在该变量被废弃时，会释放其被赋予的对象。 <code>__strong</code>修饰符表示对对象的“强引用”。持有强引用的变量在超出其作用域时被废弃，随着强引用的失效，引用的对象会随之释放。</p>
+<p>当然，<code>__strong</code>修饰符也可以用在Objective-C类成员变量和方法参数上。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">@interface Test: NSObject</span><br><span class="line">&#123;</span><br><span class="line">    id __strong obj_;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setObject:(id __strong)obj;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">@implementation Test</span><br><span class="line"></span><br><span class="line">- (instancetype)init &#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)setObject:(id __strong)obj &#123;</span><br><span class="line">    obj_ = obj</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>无需额外的工作便可以使用于类成员变量和方法参数中。<code>__strong</code>修饰符和后面要讲的<code>__weak</code>修饰符和<code>__autoreleasing</code>修饰符一起，可以保证将附有这些修饰符的自动变量初始化为<code>nil</code>。</p>
+<p>正如苹果宣称的那样，通过<code>__strong</code>修饰符再键入<code>retain</code>和<code>release</code>，完美地满足了“引用计数式内存管理的思考方式”。</p>
+<h6 id="weak修饰符"><a href="#weak修饰符" class="headerlink" title="__weak修饰符"></a>__weak修饰符</h6><p>通过<code>__strong</code>修饰符并不能完美的进行内存管理，这里会发生“循环引用”的问题。</p>
+<p>循环引用容易发生内存泄露。所谓内存泄露就是应当废弃的对象在超出其生命周期后继续存在。</p>
+<p><code>__weak</code>修饰符可以避免循环引用，与<code>__strong</code>修饰符相反，提供弱引用。弱引用不能持有对象实例，所以在超出其变量作用域时，对象即被释放。</p>
+<p>将上面例子中Test.m修改成为weak，同样我们分析其汇编实现,精简后我们可以看到</p>
+<p>，__weak本身实现的核心就是以下两个方法</p>
+<ul>
+<li>_objc_initWeak</li>
+<li>_objc_destroyWeak<br>我们通过Runtime的源码分析这两个方法的实现：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">id objc_initWeak(id *location, id newObj)</span><br><span class="line">&#123;</span><br><span class="line">    //省略....</span><br><span class="line">    return storeWeak&lt;false/*old*/, true/*new*/, true/*crash*/&gt;</span><br><span class="line">        (location, (objc_object*)newObj);</span><br><span class="line">&#125;</span><br><span class="line">void objc_destroyWeak(id *location)</span><br><span class="line">&#123;</span><br><span class="line">    (void)storeWeak&lt;true/*old*/, false/*new*/, false/*crash*/&gt;</span><br><span class="line">        (location, nil);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以，本质上都是调用了storeWeak函数，这个函数内容较多，主要做了以下事情</p>
+<ul>
+<li>获取存储weak对象的map，这个map的key是对象的地址，value是weak引用的地址。</li>
+<li>当对象被释放的时候，根据对象的地址可以找到对应的weak引用的地址，将其置为nil即可。</li>
+</ul>
+<h6 id="unsafe-unretained修饰符"><a href="#unsafe-unretained修饰符" class="headerlink" title="__unsafe_unretained修饰符"></a>__unsafe_unretained修饰符</h6><p><code>__unsafe_unretained</code>修饰符是不安全的修饰符，尽管<code>ARC</code>式的内存管理是编译器的工作，但附有<code>__unsafe_unretained</code>修饰符的变量不属于编译器的内存管理对象。<code>__unsafe_unretained</code>和<code>__weak</code>一样不能持有对象。</p>
+<p>如果在使用<code>__unsafe_unretained</code>修饰符时，赋值给<code>__strong</code>修饰符的变量时有必要确保被赋值的对象确实存在。</p>
+<h6 id="autoreleasing修饰符"><a href="#autoreleasing修饰符" class="headerlink" title="__autoreleasing修饰符"></a>__autoreleasing修饰符</h6><p>在<code>ARC</code>中，我也可以使用<code>autorelease</code>功能。指定“<code>@autoreleasepool</code>块”来代替“<code>NSAutoreleasePool</code>类对象生成、持有以及废弃这一范围，使用附有<code>__autoreleasing</code>修饰符的变量替代<code>autorelease</code>方法。</p>
+<p>其实我们不用显示的附加 <code>__autoreleasing</code>修饰符，这是由于编译器会检查方法名是否以<code>alloc/new/copy/mutableCopy</code>开始，如果不是则自动将返回值的对象注册到<code>autoreleasepool</code>。</p>
+<p>有时候<code>__autoreleasing</code>修饰符要和<code>__weak</code>修饰符配合使用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">id __weak obj1 = obj0;</span><br><span class="line"></span><br><span class="line">id __autoreleasing tmp = obj1;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>为什么访问附有<code>__weak</code>修饰符的变量时必须访问注册到<code>autoreleasepool</code>的对象呢？这是因为<code>__weak</code>修饰符只持有对象的弱引用，而在访问引用对象的过程中，该对象有可能被废弃。如果把访问的对象注册到<code>autoreleasepool</code>中，那么在<code>@autoreleasepool</code>块结束之前都能确保该对象存在。</p>
+<h6 id="属性与所有权修饰符的对应关系"><a href="#属性与所有权修饰符的对应关系" class="headerlink" title="属性与所有权修饰符的对应关系"></a>属性与所有权修饰符的对应关系</h6><p><a href="https://upload-images.jianshu.io/upload_images/301129-87c4982ef025d1bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="noopener"><img src="https://upload-images.jianshu.io/upload_images/301129-87c4982ef025d1bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="img"></a>以上各种属性赋值给指定的属性中就相当于赋值给附加各属性对应的所有权修饰符的变量中。只有<code>copy</code>不是简单的赋值，它赋值的是通过<code>NSCopying</code>接口的<code>copyWithZone：</code>方法复制赋值源所生成的对象。</p>
+<h5 id="ARC规则"><a href="#ARC规则" class="headerlink" title="ARC规则"></a>ARC规则</h5><p>在<code>ARC</code>有效的情况下编译源代码，必须遵守一定的规则。</p>
+<h6 id="不能使用retain-release-retainCount-autorelease"><a href="#不能使用retain-release-retainCount-autorelease" class="headerlink" title="不能使用retain/release/retainCount/autorelease"></a>不能使用<code>retain/release/retainCount/autorelease</code></h6><p><code>ARC</code>有效时，实现<code>retain/release/retainCount/autorelease</code>会引起编译错误。代码会标红，编译不通过。</p>
+<h6 id="不能使用NSAllocateObject-NSDeallocateObject"><a href="#不能使用NSAllocateObject-NSDeallocateObject" class="headerlink" title="不能使用NSAllocateObject/NSDeallocateObject"></a>不能使用<code>NSAllocateObject/NSDeallocateObject</code></h6><h6 id="须遵守内存管理的方法命名规则"><a href="#须遵守内存管理的方法命名规则" class="headerlink" title="须遵守内存管理的方法命名规则"></a>须遵守内存管理的方法命名规则</h6><p><code>alloc</code>,<code>new</code>,<code>copy</code>,<code>mutableCopy</code>,<code>init</code> 以<code>init</code>开始的方法的规则要比<code>alloc</code>,<code>new</code>,<code>copy</code>,<code>mutableCopy</code>更严格。该方法必须是实例方法，并且要返回对象。返回的对象应为<code>id</code>类型或方法声明类的对象类型，抑或是该类的超类型或子类型。该返回对象并不注册到<code>autoreleasepool</code>上。基本上只是对<code>alloc</code>方法返回值的对象进行初始化处理并返回该对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//符合命名规则</span><br><span class="line">- (id) initWithObject;</span><br><span class="line"></span><br><span class="line">//不符合命名规则</span><br><span class="line">- (void) initThisObject;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<h6 id="不要显式调用dealloc"><a href="#不要显式调用dealloc" class="headerlink" title="不要显式调用dealloc"></a>不要显式调用<code>dealloc</code></h6><p>当对象的引用计数为<code>0</code>，所有者不持有该对象时，该对象会被废弃，同时调用对象的<code>dealloc</code>方法。<code>ARC</code>会自动对此进行处理，因此不必书写<code>[super dealloc]</code>。</p>
+<h6 id="使用-autoreleasepool块替代NSAutoreleasePool"><a href="#使用-autoreleasepool块替代NSAutoreleasePool" class="headerlink" title="使用@autoreleasepool块替代NSAutoreleasePool"></a>使用<code>@autoreleasepool</code>块替代<code>NSAutoreleasePool</code></h6><h6 id="不能使用区域-NSZone"><a href="#不能使用区域-NSZone" class="headerlink" title="不能使用区域(NSZone)"></a>不能使用区域(NSZone)</h6><h6 id="对象型变量不能作为C语言结构体（struct、union）的成员"><a href="#对象型变量不能作为C语言结构体（struct、union）的成员" class="headerlink" title="对象型变量不能作为C语言结构体（struct、union）的成员"></a>对象型变量不能作为C语言结构体（struct、union）的成员</h6><p>C语言结构体（struct、union）的成员中，如果存在Objective-C对象型变量，便会引起编译错误。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct Data &#123;</span><br><span class="line">    NSMutableArray *array;</span><br><span class="line">&#125;;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>显示警告: ARC forbids Objective-C objects in struct</p>
+</blockquote>
+<p>在<code>C</code>语言的规约上没有方法来管理结构体成员的生命周期。因为<code>ARC</code>把内存管理的工资分配给编译器，所以编译器必须能够知道并管理对象的生命周期。例如<code>C</code>语言的局部变量可使用该变量的作用域管理对象。但是对于<code>C</code>语言的结构体成员来说，这在标准上就是不可实现的。</p>
+<p>要把对象类型添加到结构体成员中，可以强制转换为<code>void *</code>或是附加<code>__unsafe_unretained</code>修饰符。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct Data &#123;</span><br><span class="line">    NSMutableArray __unsafe_unretained *array;</span><br><span class="line">&#125;;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p><code>__unsafe_unretained</code>修饰符的变量不属于编译器的内存管理对象。如果管理时不注意赋值对象的所有者，便可能遭遇内存泄露或者程序崩溃。</p>
+<h6 id="显示转换id和void"><a href="#显示转换id和void" class="headerlink" title="显示转换id和void *"></a>显示转换<code>id</code>和<code>void *</code></h6><p>在MRC时，将<code>id</code>变量强制转换<code>void *</code>变量是可以的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">id obj = [[NSObject alloc] init];</span><br><span class="line"></span><br><span class="line">void *p = obj;</span><br><span class="line"></span><br><span class="line">id o = p;</span><br><span class="line"></span><br><span class="line">[o release];</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>但是在ARC时就会编译报错，<code>id</code>型或对象型变量赋值给<code>void *</code>或者逆向赋值时都需要进行特定的转换。如果只想单纯的赋值，则可以使用“<code>__bridge</code>转换”</p>
+<p><strong>bridge转换中还有另外两种转换，分部是“`</strong>bridge_retained<code>”和“</code><strong>bridge_transfer<code>转换”</code></strong>bridge_retained<code>转换与</code>retain<code>类似，</code>__bridge_transfer`转换与release类似。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">void *p = (__bridge_retained void *)[[NSObject alloc] init];</span><br><span class="line">NSLog(@&quot;class = %@&quot;, [(__bridge id)p class]);</span><br><span class="line">(void)(__bridge_transfer id)p;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<h3 id="ARC内存的泄露和检测"><a href="#ARC内存的泄露和检测" class="headerlink" title="ARC内存的泄露和检测"></a>ARC内存的泄露和检测</h3><h4 id="ARC内存泄露常见场景"><a href="#ARC内存泄露常见场景" class="headerlink" title="ARC内存泄露常见场景"></a>ARC内存泄露常见场景</h4><h5 id="对象型变量作为C语言结构体（struct、union）的成员"><a href="#对象型变量作为C语言结构体（struct、union）的成员" class="headerlink" title="对象型变量作为C语言结构体（struct、union）的成员"></a>对象型变量作为C语言结构体（struct、union）的成员</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct Data &#123;</span><br><span class="line">    NSMutableArray __unsafe_unretained *array;</span><br><span class="line">&#125;;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p><code>__unsafe_unretained</code>修饰符的变量不属于编译器的内存管理对象。如果管理时不注意赋值对象的所有者，便可能遭遇内存泄露或者程序崩溃。</p>
+<h5 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h5><p>循环引用常见有三种现象：</p>
+<ul>
+<li>两个对象互相持有对象，这个可以设置弱引用解决。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@interface Test: NSObject</span><br><span class="line">&#123;</span><br><span class="line">    id __weak obj_;</span><br><span class="line">&#125;</span><br><span class="line">- (void)setObject:(id __strong)obj;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<ul>
+<li>block持有self对象，这个要在block块外面和里面设置弱引用和强引用。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__weak __typeof(self) wself = self;</span><br><span class="line">obj.block = ^&#123;</span><br><span class="line">    __strong __typeof(wself) sself = wself;</span><br><span class="line">    </span><br><span class="line">    [sself updateSomeThing];</span><br><span class="line">&#125;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<ul>
+<li>NSTimer的target持有self</li>
+</ul>
+<blockquote>
+<p>NSTimer会造成循环引用，timer会强引用target即self，一般self又会持有timer作为属性，这样就造成了循环引用。 那么，如果timer只作为局部变量，不把timer作为属性呢？同样释放不了，因为在加入runloop的操作中，timer被强引用。而timer作为局部变量，是无法执行invalidate的，所以在timer被invalidate之前，self也就不会被释放。</p>
+</blockquote>
+<h5 id="单例属性不释放"><a href="#单例属性不释放" class="headerlink" title="单例属性不释放"></a>单例属性不释放</h5><p>严格来说这个不算是内存泄露，主要就是我们在单例里面设置一个对象的属性，因为单例是不会释放的，所以单例会有一直持有这个对象的引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[Instanse shared].obj = self;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>可以看到单例持有了当前对象<code>self</code>，这个<code>self</code>就不会释放了。</p>
+<h4 id="ARC内存泄露的检测"><a href="#ARC内存泄露的检测" class="headerlink" title="ARC内存泄露的检测"></a>ARC内存泄露的检测</h4><h5 id="使用Xcode自带工具Instrument"><a href="#使用Xcode自带工具Instrument" class="headerlink" title="使用Xcode自带工具Instrument"></a>使用Xcode自带工具Instrument</h5><p>具体过程略（大家可以参考网上别的资料，比较简单）</p>
+<h5 id="在对象dealloc中进行打印"><a href="#在对象dealloc中进行打印" class="headerlink" title="在对象dealloc中进行打印"></a>在对象dealloc中进行打印</h5><p>我们生成的对象，在即将释放的时候，会调用<code>dealloc</code>方法。所以我们可以在<code>dealloc</code>打印当前对象已经释放的消息。如果没有释放，对象的<code>dealloc</code>方法就永远不会执行，此时我们知道发生了内存泄露。</p>
+<ul>
+<li><ul>
+<li>​</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/内存/" rel="tag"># 内存</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/21/多线程之锁机制/" rel="next" title="多线程之锁同步">
+                <i class="fa fa-chevron-left"></i> 多线程之锁同步
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Richard-zhang-iOS" />
+            
+              <p class="site-author-name" itemprop="name">Richard-zhang-iOS</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Richard-zhang-iOS" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zyqzhangyanqiang@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Heap-堆-和stack-栈"><span class="nav-number">1.</span> <span class="nav-text">Heap(堆)和stack(栈)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#堆是什么"><span class="nav-number">1.1.</span> <span class="nav-text">堆是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#栈是什么"><span class="nav-number">1.2.</span> <span class="nav-text">栈是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存分配中的栈和堆"><span class="nav-number">1.3.</span> <span class="nav-text">内存分配中的栈和堆</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引用计数"><span class="nav-number">2.</span> <span class="nav-text">引用计数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引用计数是什么"><span class="nav-number">2.1.</span> <span class="nav-text">引用计数是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用计数内存管理的思考方式"><span class="nav-number">2.2.</span> <span class="nav-text">引用计数内存管理的思考方式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRC-手动管理引用计数"><span class="nav-number">3.</span> <span class="nav-text">MRC(手动管理引用计数)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#自己生成的对象，自己持有"><span class="nav-number">3.1.</span> <span class="nav-text">自己生成的对象，自己持有</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#alloc的实现"><span class="nav-number">3.1.1.</span> <span class="nav-text">alloc的实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#new的实现"><span class="nav-number">3.1.2.</span> <span class="nav-text">new的实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#copy的实现"><span class="nav-number">3.1.3.</span> <span class="nav-text">copy的实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mutableCopy的实现"><span class="nav-number">3.1.4.</span> <span class="nav-text">mutableCopy的实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#浅拷贝和深拷贝"><span class="nav-number">3.1.5.</span> <span class="nav-text">浅拷贝和深拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#什么是浅拷贝、深拷贝？"><span class="nav-number">3.1.5.1.</span> <span class="nav-text">什么是浅拷贝、深拷贝？</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#如何判断浅拷贝、深拷贝？"><span class="nav-number">3.1.5.2.</span> <span class="nav-text">如何判断浅拷贝、深拷贝？</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#浅拷贝深拷贝的实现"><span class="nav-number">3.1.5.3.</span> <span class="nav-text">浅拷贝深拷贝的实现</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#其他实现"><span class="nav-number">3.1.6.</span> <span class="nav-text">其他实现</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非自己生成的对象，自己也能持有"><span class="nav-number">3.2.</span> <span class="nav-text">非自己生成的对象，自己也能持有</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不再需要自己持有的对象时释放"><span class="nav-number">3.3.</span> <span class="nav-text">不再需要自己持有的对象时释放</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#自己生成并持有对象的释放"><span class="nav-number">3.3.1.</span> <span class="nav-text">自己生成并持有对象的释放</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#非自己生成的对象持有对象的释放"><span class="nav-number">3.3.2.</span> <span class="nav-text">非自己生成的对象持有对象的释放</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#非自己生成的对象本身的释放"><span class="nav-number">3.3.3.</span> <span class="nav-text">非自己生成的对象本身的释放</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#非自己持有的对象无法释放"><span class="nav-number">3.4.</span> <span class="nav-text">非自己持有的对象无法释放</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#autorelease"><span class="nav-number">3.5.</span> <span class="nav-text">autorelease</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#autorelease介绍"><span class="nav-number">3.5.1.</span> <span class="nav-text">autorelease介绍</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#autorelease实现"><span class="nav-number">3.5.2.</span> <span class="nav-text">autorelease实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#autorelease注意"><span class="nav-number">3.5.3.</span> <span class="nav-text">autorelease注意</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC-自动管理引用计数"><span class="nav-number">4.</span> <span class="nav-text">ARC(自动管理引用计数)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ARC介绍"><span class="nav-number">4.1.</span> <span class="nav-text">ARC介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ARC有效的代码实现"><span class="nav-number">4.2.</span> <span class="nav-text">ARC有效的代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#所有权修饰符"><span class="nav-number">4.2.1.</span> <span class="nav-text">所有权修饰符</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#strong修饰符"><span class="nav-number">4.2.1.1.</span> <span class="nav-text">__strong修饰符</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#比如，对于Test-m文件，当源代码如下时："><span class="nav-number">4.2.1.2.</span> <span class="nav-text">比如，对于Test.m文件，当源代码如下时：</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#weak修饰符"><span class="nav-number">4.2.1.3.</span> <span class="nav-text">__weak修饰符</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#unsafe-unretained修饰符"><span class="nav-number">4.2.1.4.</span> <span class="nav-text">__unsafe_unretained修饰符</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#autoreleasing修饰符"><span class="nav-number">4.2.1.5.</span> <span class="nav-text">__autoreleasing修饰符</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#属性与所有权修饰符的对应关系"><span class="nav-number">4.2.1.6.</span> <span class="nav-text">属性与所有权修饰符的对应关系</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ARC规则"><span class="nav-number">4.2.2.</span> <span class="nav-text">ARC规则</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#不能使用retain-release-retainCount-autorelease"><span class="nav-number">4.2.2.1.</span> <span class="nav-text">不能使用retain/release/retainCount/autorelease</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#不能使用NSAllocateObject-NSDeallocateObject"><span class="nav-number">4.2.2.2.</span> <span class="nav-text">不能使用NSAllocateObject/NSDeallocateObject</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#须遵守内存管理的方法命名规则"><span class="nav-number">4.2.2.3.</span> <span class="nav-text">须遵守内存管理的方法命名规则</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#不要显式调用dealloc"><span class="nav-number">4.2.2.4.</span> <span class="nav-text">不要显式调用dealloc</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使用-autoreleasepool块替代NSAutoreleasePool"><span class="nav-number">4.2.2.5.</span> <span class="nav-text">使用@autoreleasepool块替代NSAutoreleasePool</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#不能使用区域-NSZone"><span class="nav-number">4.2.2.6.</span> <span class="nav-text">不能使用区域(NSZone)</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#对象型变量不能作为C语言结构体（struct、union）的成员"><span class="nav-number">4.2.2.7.</span> <span class="nav-text">对象型变量不能作为C语言结构体（struct、union）的成员</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#显示转换id和void"><span class="nav-number">4.2.2.8.</span> <span class="nav-text">显示转换id和void *</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC内存的泄露和检测"><span class="nav-number">5.</span> <span class="nav-text">ARC内存的泄露和检测</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ARC内存泄露常见场景"><span class="nav-number">5.1.</span> <span class="nav-text">ARC内存泄露常见场景</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对象型变量作为C语言结构体（struct、union）的成员"><span class="nav-number">5.1.1.</span> <span class="nav-text">对象型变量作为C语言结构体（struct、union）的成员</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#循环引用"><span class="nav-number">5.1.2.</span> <span class="nav-text">循环引用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#单例属性不释放"><span class="nav-number">5.1.3.</span> <span class="nav-text">单例属性不释放</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ARC内存泄露的检测"><span class="nav-number">5.2.</span> <span class="nav-text">ARC内存泄露的检测</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#使用Xcode自带工具Instrument"><span class="nav-number">5.2.1.</span> <span class="nav-text">使用Xcode自带工具Instrument</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在对象dealloc中进行打印"><span class="nav-number">5.2.2.</span> <span class="nav-text">在对象dealloc中进行打印</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Richard-zhang-iOS</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
