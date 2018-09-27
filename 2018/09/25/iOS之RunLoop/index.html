@@ -95,7 +95,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-f8048787d290e431.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-77fed70cd9e55b02.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/301129-8a3a84070046eda6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-09-25T09:32:12.179Z">
+<meta property="og:updated_time" content="2018-09-25T09:57:40.616Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS之Runloop">
 <meta name="twitter:description" content="Runloop 是和线程紧密相关的一个基础组件，是很多线程有关功能的幕后功臣。尽管在平常使用中几乎不太会直接用到，理解 Runloop 有利于我们更加深入地理解 iOS 的多线程模型。 本文从如下几个方面理解RunLoop的相关知识点。  RunLoop概念 RunLoop实现 RunLoop运行 RunLoop应用  RunLoop概念RunLoop介绍 RunLoop 是什么？RunLoop">
@@ -410,6 +410,7 @@
 <h4 id="RunLoop-Source"><a href="#RunLoop-Source" class="headerlink" title="RunLoop Source"></a>RunLoop Source</h4><p>Run Loop Source分为Source、Observer、Timer三种，他们统称为ModeItem。</p>
 <h5 id="CFRunLoopSource"><a href="#CFRunLoopSource" class="headerlink" title="CFRunLoopSource"></a>CFRunLoopSource</h5><p>根据官方的描述，CFRunLoopSource是对input sources的抽象。CFRunLoopSource分source0和source1两个版本，它的结构如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">struct __CFRunLoopSource &#123;</span><br><span class="line">    CFRuntimeBase _base;</span><br><span class="line">    uint32_t _bits; //用于标记Signaled状态，source0只有在被标记为Signaled状态，才会被处理</span><br><span class="line">    pthread_mutex_t _lock;</span><br><span class="line">    CFIndex _order;         /* immutable */</span><br><span class="line">    CFMutableBagRef _runLoops;</span><br><span class="line">    union &#123;</span><br><span class="line">        CFRunLoopSourceContext version0;     /* immutable, except invalidation */</span><br><span class="line">        CFRunLoopSourceContext1 version1;    /* immutable, except invalidation */</span><br><span class="line">    &#125; _context;</span><br><span class="line">&#125;;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
+<p>什么是基于端口的呢?  比较通俗的理解就是系统默认的, 非基于端口的就是用户主动触发的事件, 比如用户点击了一个按钮等。</p>
 <p>source0是App内部事件，由App自己管理的UIEvent、CFSocket都是source0。当一个source0事件准备执行的时候，必须要先把它标记为signal状态，以下是source0的结构体：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef struct &#123;</span><br><span class="line">    CFIndex version;</span><br><span class="line">    void *  info;</span><br><span class="line">    const void *(*retain)(const void *info);</span><br><span class="line">    void    (*release)(const void *info);</span><br><span class="line">    CFStringRef (*copyDescription)(const void *info);</span><br><span class="line">    Boolean (*equal)(const void *info1, const void *info2);</span><br><span class="line">    CFHashCode  (*hash)(const void *info);</span><br><span class="line">    void    (*schedule)(void *info, CFRunLoopRef rl, CFStringRef mode);</span><br><span class="line">    void    (*cancel)(void *info, CFRunLoopRef rl, CFStringRef mode);</span><br><span class="line">    void    (*perform)(void *info);</span><br><span class="line">&#125; CFRunLoopSourceContext;</span><br><span class="line">复制代码</span><br></pre></td></tr></table></figure>
 <p>source0是非基于Port的。只包含了一个回调（函数指针），它并不能主动触发事件。使用时，你需要先调用 CFRunLoopSourceSignal(source)，将这个 Source 标记为待处理，然后手动调用 CFRunLoopWakeUp(runloop) 来唤醒 RunLoop，让其处理这个事件。</p>
@@ -651,6 +652,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2018/09/27/iOS之App启动流程/" rel="prev" title="iOS之App启动流程">
+                iOS之App启动流程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -730,7 +735,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -752,7 +757,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
