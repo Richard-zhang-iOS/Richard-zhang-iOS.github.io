@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="面试," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文主要以下几个方面详细介绍了CategoryVS.Extension的用法及实现原理先，先给出结论，我们后续文章详细解释。  形式上来看，extension是匿名的category。  Extension里声明的方法需要在.m文件的@implementation中实现，Category不强制要求。  Extension可以添加属性（变量），Category不可以。">
+<meta name="keywords" content="面试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS之CategoryVS.Extension">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/28/iOS之CategoryVS.Extension/index.html">
+<meta property="og:site_name" content="Richard-zhang-iOS的博客">
+<meta property="og:description" content="本文主要以下几个方面详细介绍了CategoryVS.Extension的用法及实现原理先，先给出结论，我们后续文章详细解释。  形式上来看，extension是匿名的category。  Extension里声明的方法需要在.m文件的@implementation中实现，Category不强制要求。  Extension可以添加属性（变量），Category不可以。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710588468886.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710606382484.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710623915660.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710634767648.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710651182373.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710666613075.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710676233152.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710865826134.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710878713669.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710885730399.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710891419990.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493711045659045.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493711059565240.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493711070288177.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493711093398852.png">
+<meta property="og:image" content="http://cc.cocimg.com/api/uploads/20170502/1493711118866208.png">
+<meta property="og:updated_time" content="2018-09-28T03:12:08.674Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS之CategoryVS.Extension">
+<meta name="twitter:description" content="本文主要以下几个方面详细介绍了CategoryVS.Extension的用法及实现原理先，先给出结论，我们后续文章详细解释。  形式上来看，extension是匿名的category。  Extension里声明的方法需要在.m文件的@implementation中实现，Category不强制要求。  Extension可以添加属性（变量），Category不可以。">
+<meta name="twitter:image" content="http://cc.cocimg.com/api/uploads/20170502/1493710588468886.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/28/iOS之CategoryVS.Extension/"/>
+
+
+
+
+
+  <title>iOS之CategoryVS.Extension | Richard-zhang-iOS的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Richard-zhang-iOS的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/28/iOS之CategoryVS.Extension/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Richard-zhang-iOS">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Richard-zhang-iOS的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS之CategoryVS.Extension</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-28T11:07:09+08:00">
+                2018-09-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文主要以下几个方面详细介绍了CategoryVS.Extension的用法及实现原理先，先给出结论，我们后续文章详细解释。</p>
+<ul>
+<li><p>形式上来看，extension是匿名的category。</p>
+</li>
+<li><p>Extension里声明的方法需要在.m文件的@implementation中实现，Category不强制要求。</p>
+</li>
+<li>Extension可以添加属性（变量），Category不可以。</li>
+</ul>
+<a id="more"></a>
+<h2 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h2><h3 id="什么是Category"><a href="#什么是Category" class="headerlink" title="什么是Category?"></a>什么是Category?</h3><p>category是Objective-C 2.0之后添加的语言特性，别人口中的分类、类别其实都是指的category。category的主要作用是为已经存在的类添加方法。除此之外，apple还推荐了category的另外两个使用场景。</p>
+<p>可以把类的实现分开在几个不同的文件里面。这样做有几个显而易见的好处。</p>
+<ul>
+<li>可以减少单个文件的体积</li>
+<li>可以把不同的功能组织到不同的category里</li>
+<li>可以由多个开发者共同完成一个类</li>
+<li>可以按需加载想要的category</li>
+<li>声明私有方法</li>
+</ul>
+<p>apple 的SDK中就大面积的使用了category这一特性。比如UIKit中的UIView。apple把不同的功能API进行了分类，这些分类包括UIViewGeometry、UIViewHierarchy、UIViewRendering等。</p>
+<p>不过除了apple推荐的使用场景，广大开发者脑洞大开，还衍生出了category的其他几个使用场景：</p>
+<ul>
+<li>模拟多继承（另外可以模拟多继承的还有protocol）</li>
+<li>把framework的私有方法公开</li>
+</ul>
+<h3 id="category特点"><a href="#category特点" class="headerlink" title="category特点"></a>category特点</h3><ul>
+<li>category只能给某个已有的类扩充方法，不能扩充成员变量。</li>
+<li>category中也可以添加属性，只不过@property只会生成setter和getter的声明，不会生成setter和getter的实现以及成员变量。</li>
+<li>如果category中的方法和类中原有方法同名，运行时会优先调用category中的方法。也就是，category中的方法会覆盖掉类中原有的方法。所以开发中尽量保证不要让分类中的方法和原有类中的方法名相同。避免出现这种情况的解决方案是给分类的方法名统一添加前缀。比如category_。</li>
+<li>如果多个category中存在同名的方法，运行时到底调用哪个方法由编译器决定，最后一个参与编译的方法会被调用。</li>
+</ul>
+<p>如下图，给UIView添加了两个category（one 和 two），并且给这两个分类都添加了名为log的方法：</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710588468886.png" alt="1055199-1299217b7107f5e2.png"></p>
+<p>UIView+one</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710606382484.png" alt="1055199-5695720d7e83e504.png"></p>
+<p>UIView+two</p>
+<p>在viewController中引入这两个category的.h文件。调用log方法：</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710623915660.png" alt="1055199-7688fb9db151b48b.png"></p>
+<p>调用category方法</p>
+<p>当编译顺序如下图所示时，调用UIView + one.m的log方法，如下图：</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710634767648.png" alt="1055199-696fa0a7658c380e.png"></p>
+<p>编译顺序</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710651182373.png" alt="1055199-0b47ed86d61ff013.png"></p>
+<p>调用结果</p>
+<p>将UIView + one.m移动到UIView + two.m上面，调用UIView + two.m的log方法，如下图：</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710666613075.png" alt="1055199-fd9f993454fd7d1f.png"></p>
+<p>编译顺序</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710676233152.png" alt="1055199-b8acd265f23c7fe9.png"></p>
+<p>调用结果</p>
+<h3 id="调用优先级"><a href="#调用优先级" class="headerlink" title="调用优先级"></a><strong>调用优先级</strong></h3><p>分类(category) &gt; 本类 &gt; 父类。即，优先调用cateory中的方法，然后调用本类方法，最后调用父类方法。</p>
+<p>注意：category是在运行时加载的，不是在编译时。</p>
+<h3 id="为什么category不能添加成员变量？"><a href="#为什么category不能添加成员变量？" class="headerlink" title="为什么category不能添加成员变量？"></a><strong>为什么category不能添加成员变量？</strong></h3><p>Objective-C类是由Class类型来表示的，它实际上是一个指向objc_class结构体的指针。它的定义如下：</p>
+<p>objc_class结构体的定义如下：</p>
+<p>在上面的objc_class结构体中，ivars是objc_ivar_list（成员变量列表）指针；methodLists是指向objc_method_list指针的指针。在Runtime中，objc_class结构体大小是固定的，不可能往这个结构体中添加数据，只能修改。所以ivars指向的是一个固定区域，只能修改成员变量值，不能增加成员变量个数。methodList是一个二维数组，所以可以修改*methodLists的值来增加成员方法，虽没办法扩展methodLists指向的内存区域，却可以改变这个内存区域的值（存储的是指针）。因此，可以动态添加方法，不能添加成员变量。</p>
+<h3 id="category中能添加属性吗？"><a href="#category中能添加属性吗？" class="headerlink" title="category中能添加属性吗？"></a><strong>category中能添加属性吗？</strong></h3><p>Category不能添加成员变量（instance variables），那到底能不能添加属性（property）呢？</p>
+<p>这个我们要从Category的结构体开始分析：</p>
+<p>从Category的定义也可以看出Category的可为（可以添加实例方法，类方法，甚至可以实现协议，添加属性）和不可为（无法添加实例变量）。</p>
+<p>但是为什么网上很多人都说Category不能添加属性呢？</p>
+<p>实际上，Category实际上允许添加属性的，同样可以使用@property，但是不会生成_变量（带下划线的成员变量），也不会生成添加属性的getter和setter方法的实现，所以，尽管添加了属性，也无法使用点语法调用getter和setter方法（实际上，点语法是可以写的，只不过在运行时调用到这个方法时候会报方法找不到的错误，如下图）。但实际上可以使用runtime去实现Category为已有的类添加新的属性并生成getter和setter方法。详细内容可以看峰哥之前的文章：<a href="http://www.imlifengfeng.com/blog/?p=397" target="_blank" rel="noopener">《iOS Runtime之四：关联对象》</a></p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710865826134.png" alt="1055199-f1b6fd566ad50692.png"></p>
+<p>给category添加property</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710878713669.png" alt="1055199-e47b578db44fd663.png"></p>
+<p>调用category中property的setter（报方法找不到的错误）</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493710885730399.png" alt="1055199-d9d250fd1691d24f.png"><img src="http://cc.cocimg.com/api/uploads/20170502/1493710891419990.png" alt="1055199-d9d250fd1691d24f.png"></p>
+<p>调用category中property的getter（报方法找不到的错误）</p>
+<p>需要注意的有两点：</p>
+<ul>
+<li>1)、category的方法没有“完全替换掉”原来类已经有的方法，也就是说如果category和原来类都有methodA，那么category附加完成之后，类的方法列表里会有两个methodA。</li>
+<li>2)、category的方法被放到了新方法列表的前面，而原来类的方法被放到了新方法列表的后面，这也就是我们平常所说的category的方法会“覆盖”掉原来类的同名方法，这是因为运行时在查找方法的时候是顺着方法列表的顺序查找的，它只要一找到对应名字的方法，就会罢休，殊不知后面可能还有一样名字的方法。</li>
+</ul>
+<h2 id="Extension"><a href="#Extension" class="headerlink" title="Extension"></a><strong>Extension</strong></h2><h3 id="什么是extension"><a href="#什么是extension" class="headerlink" title="什么是extension"></a><strong>什么是extension</strong></h3><p>extension被开发者称之为扩展、延展、匿名分类。extension看起来很像一个匿名的category，但是extension和category几乎完全是两个东西。和category不同的是extension不但可以声明方法，还可以声明属性、成员变量。extension一般用于声明私有方法，私有属性，私有成员变量。</p>
+<h3 id="extension的存在形式"><a href="#extension的存在形式" class="headerlink" title="extension的存在形式"></a><strong>extension的存在形式</strong></h3><p>category是拥有.h文件和.m文件的东西。但是extension不然。extension只存在于一个.h文件中，或者extension只能寄生于一个类的.m文件中。比如，viewController.m文件中通常寄生这么个东西，其实这就是一个extension：</p>
+<p>当然我们也可以创建一个单独的extension文件，如下图：</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493711045659045.png" alt="1055199-56cba3e296a4bf59.png"></p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493711059565240.png" alt="1055199-d6e6a0b1e95e4e80.png"></p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493711070288177.png" alt="1055199-753211c1b4ca69d6.png"></p>
+<p>UIView_extension.h中声明方法：</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493711093398852.png" alt="1055199-fe05e6b5e89e4d15.png"></p>
+<p>导入UIView_extension.h文件进行使用：</p>
+<p><img src="http://cc.cocimg.com/api/uploads/20170502/1493711118866208.png" alt="1055199-a392389b341fc944.png"></p>
+<p>注意：extension常用的形式并不是以一个单独的.h文件存在，而是寄生在类的.m文件中。</p>
+<h3 id="category和extension的区别"><a href="#category和extension的区别" class="headerlink" title="category和extension的区别"></a><strong>category和extension的区别</strong></h3><p>就category和extension的区别来看，我们可以推导出一个明显的事实，extension可以添加实例变量，而category是无法添加实例变量的（因为在运行期，对象的内存布局已经确定，如果添加实例变量就会破坏类的内部布局，这对编译型语言来说是灾难性的）。</p>
+<ul>
+<li>extension在编译期决议，它就是类的一部分，但是category则完全不一样，它是在运行期决议的。extension在编译期和头文件里的@interface以及实现文件里的@implement一起形成一个完整的类，它、extension伴随类的产生而产生，亦随之一起消亡。</li>
+<li>extension一般用来隐藏类的私有信息，你必须有一个类的源码才能为一个类添加extension，所以你无法为系统的类比如NSString添加extension，除非创建子类再添加extension。而category不需要有类的源码，我们可以给系统提供的类添加category。</li>
+<li>extension可以添加实例变量，而category不可以。</li>
+<li>extension和category都可以添加属性，但是category的属性不能生成成员变量和getter、setter方法的实现。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/面试/" rel="tag"># 面试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/27/iOS之App启动流程/" rel="next" title="iOS之App启动流程">
+                <i class="fa fa-chevron-left"></i> iOS之App启动流程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.png"
+                alt="Richard-zhang-iOS" />
+            
+              <p class="site-author-name" itemprop="name">Richard-zhang-iOS</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Richard-zhang-iOS" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:zyqzhangyanqiang@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Category"><span class="nav-number">1.</span> <span class="nav-text">Category</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Category"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Category?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#category特点"><span class="nav-number">1.2.</span> <span class="nav-text">category特点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调用优先级"><span class="nav-number">1.3.</span> <span class="nav-text">调用优先级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么category不能添加成员变量？"><span class="nav-number">1.4.</span> <span class="nav-text">为什么category不能添加成员变量？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#category中能添加属性吗？"><span class="nav-number">1.5.</span> <span class="nav-text">category中能添加属性吗？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extension"><span class="nav-number">2.</span> <span class="nav-text">Extension</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是extension"><span class="nav-number">2.1.</span> <span class="nav-text">什么是extension</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#extension的存在形式"><span class="nav-number">2.2.</span> <span class="nav-text">extension的存在形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#category和extension的区别"><span class="nav-number">2.3.</span> <span class="nav-text">category和extension的区别</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Richard-zhang-iOS</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
