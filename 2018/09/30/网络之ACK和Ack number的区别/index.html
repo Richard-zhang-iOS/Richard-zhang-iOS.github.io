@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="线程," />
+  <meta name="keywords" content="网络," />
 
 
 
@@ -79,22 +79,28 @@
 
 
 
-<meta name="description" content="本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。  线程状态图综述 JAVA中线程状态图实例 iOS中NSThead线程状态图  线程状态图综述">
-<meta name="keywords" content="线程">
+<meta name="description" content="在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分">
+<meta name="keywords" content="网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="操作系统之线程状态图">
-<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/08/操作系统线程状态图/index.html">
+<meta property="og:title" content="网络之ACK与Ack number的区别">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/30/网络之ACK和Ack number的区别/index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
-<meta property="og:description" content="本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。  线程状态图综述 JAVA中线程状态图实例 iOS中NSThead线程状态图  线程状态图综述">
+<meta property="og:description" content="在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/线程状态1.jpeg?raw=true">
-<meta property="og:image" content="http://static.oschina.net/uploads/space/2013/0621/174442_0BNr_182175.jpg">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1903695-9f40f741153790bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/922">
-<meta property="og:updated_time" content="2018-09-15T09:35:41.357Z">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/74262cdd6d49f928957d54dd82601187.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/d0616a3e4385d251fc5fa9484b644c3d.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/8e5d2477061d2ca7f7c6072d14c33cd6.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/36f4a085db491d0c6f0400bb0ac1ca06.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/2649f5611ac3fee67da81e5a184727e4.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/2bf62517476cf5c6a78bfa0a99b98b13.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/52954e829f3164359c984ca46461ce2f.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/5d9f0acd3c8a016233ac37582b5da26b.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/08f7c65e0da13f4aca64d04ca31bc333.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta property="og:updated_time" content="2018-09-30T07:03:26.723Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="操作系统之线程状态图">
-<meta name="twitter:description" content="本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。  线程状态图综述 JAVA中线程状态图实例 iOS中NSThead线程状态图  线程状态图综述">
-<meta name="twitter:image" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/线程状态1.jpeg?raw=true">
+<meta name="twitter:title" content="网络之ACK与Ack number的区别">
+<meta name="twitter:description" content="在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分">
+<meta name="twitter:image" content="http://i2.51cto.com/images/blog/201711/24/74262cdd6d49f928957d54dd82601187.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
 
 
 
@@ -124,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/08/操作系统线程状态图/"/>
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/30/网络之ACK和Ack number的区别/"/>
 
 
 
 
 
-  <title>操作系统之线程状态图 | Richard-zhang-iOS的博客</title>
+  <title>网络之ACK与Ack number的区别 | Richard-zhang-iOS的博客</title>
   
 
 
@@ -267,7 +273,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/08/操作系统线程状态图/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/30/网络之ACK和Ack number的区别/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Richard-zhang-iOS">
@@ -284,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">操作系统之线程状态图</h1>
+          <h1 class="post-title" itemprop="name headline">网络之ACK与Ack number的区别</h1>
         
 
         <div class="post-meta">
@@ -296,8 +302,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-08T17:24:56+08:00">
-                2018-09-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-30T11:13:05+08:00">
+                2018-09-30
               </time>
             
 
@@ -319,8 +325,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/计算机/" itemprop="url" rel="index">
-                    <span itemprop="name">计算机</span>
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
                   </a>
                 </span>
 
@@ -356,57 +362,20 @@
       
 
       
-        <p>本文主要介绍了线程的状态图，以及通过iOS中NSThead的具体例子来详细解释每个状态的意义。</p>
-<ul>
-<li>线程状态图综述</li>
-<li>JAVA中线程状态图实例</li>
-<li>iOS中NSThead线程状态图</li>
-</ul>
-<h2 id="线程状态图综述"><a href="#线程状态图综述" class="headerlink" title="线程状态图综述"></a>线程状态图综述</h2><p><img src="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/blob/master/res/线程状态1.jpeg?raw=true"></p>
+        <p>在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分不清到底哪个是哪个了。<br>其实ACK也好，ack也好，只不过是个代号而已，叫他张三也行，叫他李四也没事，没有任何影响，因为咱们不会改动那个东西。就算是把名字记反了，对咱们也没有任何影响，大家知道三次握手的数据包里有这么两个东西就行了。<br>一个是确认值(Acknowledgement)，为1便是确认连接。<br>另一个是确认编号(Acknowledgement Number)，即接收到的上一次远端主机传来的seq然后+1，再发送给远端主机。提示远端主机已经成功接收上一次所有数据。</p>
 <a id="more"></a>
-<ol>
-<li><p><strong>新建状态(New) </strong>: 线程对象被创建后，就进入了新建状态。</p>
-</li>
-<li><p><strong>就绪状态(Runnable)</strong>: 也被称为“可执行状态”。线程对象被创建后，其它线程调用了该对象的start()方法，从而来启动该线程</p>
-</li>
-<li><p><strong>运行状态(Running)</strong> : 线程获取CPU权限进行执行。需要注意的是，线程只能从就绪状态进入到运行状态。</p>
-</li>
-<li><p><strong>阻塞状态(Blocked) </strong> : 阻塞状态是线程因为某种原因放弃CPU使用权，暂时停止运行。直到线程进入就绪状态，才有机会转到运行状态。阻塞的情况分三种：</p>
-<p><strong>等待阻塞</strong> – 通过调用线程的wait()方法，让线程等待某工作的完成。<br><strong>同步阻塞</strong> – 线程在获取synchronized同步锁失败(因为锁被其它线程所占用)，它会进入同步阻塞状态。<br><strong>其他阻塞</strong> – 通过调用线程的sleep()或join()或发出了I/O请求时，线程会进入到阻塞状态。当sleep()状态超时、join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入就绪状态。</p>
-</li>
-<li><p><strong>死亡状态(Dead)</strong>    : 线程执行完了或者因异常退出了run()方法，该线程结束生命周期。</p>
-</li>
-</ol>
-<p>下面通过一个更具体的运行图来再次解释线程的各个状态</p>
-<h2 id="JAVA中线程状态图实例"><a href="#JAVA中线程状态图实例" class="headerlink" title="JAVA中线程状态图实例"></a>JAVA中线程状态图实例</h2><p><img src="http://static.oschina.net/uploads/space/2013/0621/174442_0BNr_182175.jpg" alt="img"></p>
-<p>详细解释三种<strong>阻塞状态</strong></p>
-<p><strong>(一). 等待阻塞</strong>：运行(running)的线程执行o.wait()方法，JVM会把该线程放入等待队列(waitting queue)中。</p>
-<p><strong>(二). 同步阻塞：</strong>运行(running)的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入锁池(lock pool)中。</p>
-<p><strong>(三). 其他阻塞：</strong>运行(running)的线程执行Thread.sleep(long ms)或t.join()方法，或者发出了I/O请求时，JVM会把该线程置为阻塞状态。当sleep()状态超时、join()等待线程终止或者超时、或者I/O处理完毕时，线程重新转入可运行(runnable)状态。</p>
-<p><strong>补充：</strong></p>
-<p><strong>Synchronized是非公平锁。</strong> Synchronized在进入等待列表时，等待的线程会先尝试自旋获取锁，如果获取不到就进入等待列表，这明显对于已经进入队列的线程是不公平的。</p>
-<h2 id="iOS中NSThead线程状态图"><a href="#iOS中NSThead线程状态图" class="headerlink" title="iOS中NSThead线程状态图"></a>iOS中NSThead线程状态图</h2><p>下面是iOS中NSThead的使用详解</p>
-<p><strong>新建状态 :</strong> 实例化线程对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">说明：创建线程有多种方式，这里不做过多的介绍</span><br><span class="line">NSThread *thread =[[NSThread alloc] initWithTarget:self</span><br><span class="line">                                          selector:@selector(run)</span><br><span class="line">                                            object:nil];</span><br></pre></td></tr></table></figure>
-<p><strong>就绪状态 ：</strong>向线程对象发送 start 消息，detachNewThreadSelector 方法和 performSelectorInBackground 方法会直接实例化一个线程对象并加入可调度线程池</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">线程开启 : 线程进入可调度线程池</span><br><span class="line">[thread start];</span><br></pre></td></tr></table></figure>
-<p><strong>运行状态：</strong></p>
-<ul>
-<li>CPU 负责调度可调度线程池中线程的执行</li>
-<li>线程执行完成之前(死亡之前)，状态可能会在就绪和运行之间来回切换</li>
-<li>就绪和运行之间的状态变化由 CPU 负责，程序员不能干预</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/1903695-9f40f741153790bf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/922" alt="img"></p>
-<ul>
-<li>当 CPU 调度当前线程 , 进入运行状态</li>
-<li>当 CPU 调度其他线程 , 进入就绪状态</li>
-</ul>
-<p><strong>阻塞状态</strong>  : 当满足某个预定条件时，可以使用休眠或锁阻塞线程执行</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">方法执行过程，符合某一条件时，可以利用 sleep 方法让线程进入 阻塞 状态</span><br><span class="line"></span><br><span class="line">sleepForTimeInterval：    //休眠指定时长    (从现在起睡多少秒)</span><br><span class="line">sleepUntilDate：          //休眠到指定日期 (从现在起睡到指定的日期)</span><br><span class="line">@synchronized(self) &#123; &#125;   //互斥锁</span><br></pre></td></tr></table></figure>
-<p><strong>死亡状态</strong>： (一旦线程停止或死亡了，就不能再次开启任务 , 后续的所有代码都不会被执行 )</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1) 正常死亡</span><br><span class="line">- 线程执行完毕</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(2) 非正常死亡</span><br><span class="line">- [NSThread exit](自杀)      当满足某个条件后，在线程内部自己中止执行</span><br><span class="line">- (被逼着死亡) 当满足某个条件后，在主线程给其它线程打个死亡标记,让子线程自行了断.</span><br><span class="line">注意：在终止线程之前，应该注意释放之前分配的对象！</span><br></pre></td></tr></table></figure>
-<p>内存情况 : 线程死亡后，线程对象从内存中移除</p>
+<p><img src="http://i2.51cto.com/images/blog/201711/24/74262cdd6d49f928957d54dd82601187.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>三次握手的数据包，红框内为第一次握手时IP为192.168.56.1的请求端（请求连接端）发送的seq，值为0（实际中此值不一定为0）</p>
+<p><img src="http://i2.51cto.com/images/blog/201711/24/d0616a3e4385d251fc5fa9484b644c3d.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>红框内为第二次握手时IP为192.168.56.130的服务端（被请求连接端）发送的seq，因为是服务端发给请求端的一个新的seq，所以值为0（实际中此值不一定为0）<br>蓝框内为Ack（Acknowledgement Number确认编号）即我理解的小写的<font color="Red"><strong>ack</strong></font>，值为第一次握手时请求端发送来的seq+1即0+1=1</p>
+<p><img src="http://i2.51cto.com/images/blog/201711/24/8e5d2477061d2ca7f7c6072d14c33cd6.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>红框内为第三次握手时IP为192.168.56.1的请求端（请求连接端）发送的seq，因为第一次握手时它发送给服务端的seq为0（黄框内），在上次的基础上+1，值就是1。<br>蓝框内的Ack（Acknowledgement Number确认编号）还是我理解的小写的<font color="Red"><strong>ack</strong></font>，值为第二次握手时请求端发来的seq+1，即绿框中的seq+1，值为1</p>
+<p>那么问题来了，那个起确认连接作用的确认值即我理解的那个大写的<font color="Red"><strong>ACK</strong></font>在哪呢？</p>
+<p><img src="http://i2.51cto.com/images/blog/201711/24/36f4a085db491d0c6f0400bb0ac1ca06.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>在这里。</p>
+<p>展开看一下：<br><img src="http://i2.51cto.com/images/blog/201711/24/2649f5611ac3fee67da81e5a184727e4.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
+<p>对照网上找到的关于第二次握手的标志位的一张图可以看出：<br>确认位即ACK，为1即为确认进行连接<br>同步位即SYN，从第一次握手时，此位就为1<br><img src="http://i2.51cto.com/images/blog/201711/24/2bf62517476cf5c6a78bfa0a99b98b13.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
+<p>下面是网上找到的三次握手的标志图，供参考：</p>
+<p>第一次握手的标志位<br>我们可以看到标志位里面只有个同步位，也就是在做请求(SYN)<br><img src="http://i2.51cto.com/images/blog/201711/24/52954e829f3164359c984ca46461ce2f.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
+<p>第二次握手的标志位<br>我们可以看到标志位里面有个确认位和同步位，也就是在做应答(SYN + ACK)<br><img src="http://i2.51cto.com/images/blog/201711/24/5d9f0acd3c8a016233ac37582b5da26b.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
+<p>第三次握手的标志位<br>我们可以看到标志位里面只有个确认位，也就是再做再次确认(ACK)<br><img src="http://i2.51cto.com/images/blog/201711/24/08f7c65e0da13f4aca64d04ca31bc333.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
+<p>至此问题结束</p>
 
       
     </div>
@@ -424,7 +393,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/线程/" rel="tag"># 线程</a>
+            <a href="/tags/网络/" rel="tag"># 网络</a>
           
         </div>
       
@@ -437,8 +406,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/30/JavaScrip中this原理及经验/" rel="next" title="JavaScrip中this原理及经验">
-                <i class="fa fa-chevron-left"></i> JavaScrip中this原理及经验
+              <a href="/2018/09/28/iOS之CategoryVS.Extension/" rel="next" title="iOS之CategoryVS.Extension">
+                <i class="fa fa-chevron-left"></i> iOS之CategoryVS.Extension
               </a>
             
           </div>
@@ -447,8 +416,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/09/操作系统之进程状态图/" rel="prev" title="操作系统之进程状态图">
-                操作系统之进程状态图 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/30/网络之Socket和Http的区别/" rel="prev" title="网络之Socket和Http区别">
+                网络之Socket和Http区别 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -501,17 +470,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -591,22 +551,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线程状态图综述"><span class="nav-number">1.</span> <span class="nav-text">线程状态图综述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JAVA中线程状态图实例"><span class="nav-number">2.</span> <span class="nav-text">JAVA中线程状态图实例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS中NSThead线程状态图"><span class="nav-number">3.</span> <span class="nav-text">iOS中NSThead线程状态图</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
