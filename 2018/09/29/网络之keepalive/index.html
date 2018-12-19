@@ -79,28 +79,18 @@
 
 
 
-<meta name="description" content="在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分">
+<meta name="description" content="我们说到keepalive的时候，需要先明确一点，这个keepalive说的是tcp的还是http的。 tcp的keepalive是侧重在保持客户端和服务端的连接，一方会不定期发送心跳包给另一方，当一方端掉的时候，没有断掉的定时发送几次心跳包，如果间隔发送几次，对方都返回的是RST，而不是ACK，那么就释放当前链接。设想一下，如果tcp层没有keepalive的机制，一旦一方断开连接却没有发送FI">
 <meta name="keywords" content="网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网络之ACK与Ack number的区别">
-<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/30/网络之ACK和Ack number的区别/index.html">
+<meta property="og:title" content="网络之keepalive">
+<meta property="og:url" content="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/29/网络之keepalive/index.html">
 <meta property="og:site_name" content="Richard-zhang-iOS的博客">
-<meta property="og:description" content="在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分">
+<meta property="og:description" content="我们说到keepalive的时候，需要先明确一点，这个keepalive说的是tcp的还是http的。 tcp的keepalive是侧重在保持客户端和服务端的连接，一方会不定期发送心跳包给另一方，当一方端掉的时候，没有断掉的定时发送几次心跳包，如果间隔发送几次，对方都返回的是RST，而不是ACK，那么就释放当前链接。设想一下，如果tcp层没有keepalive的机制，一旦一方断开连接却没有发送FI">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/74262cdd6d49f928957d54dd82601187.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/d0616a3e4385d251fc5fa9484b644c3d.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/8e5d2477061d2ca7f7c6072d14c33cd6.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/36f4a085db491d0c6f0400bb0ac1ca06.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/2649f5611ac3fee67da81e5a184727e4.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/2bf62517476cf5c6a78bfa0a99b98b13.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/52954e829f3164359c984ca46461ce2f.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/5d9f0acd3c8a016233ac37582b5da26b.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:image" content="http://i2.51cto.com/images/blog/201711/24/08f7c65e0da13f4aca64d04ca31bc333.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:updated_time" content="2018-09-30T07:03:26.723Z">
+<meta property="og:updated_time" content="2018-12-19T02:13:37.769Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="网络之ACK与Ack number的区别">
-<meta name="twitter:description" content="在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分">
-<meta name="twitter:image" content="http://i2.51cto.com/images/blog/201711/24/74262cdd6d49f928957d54dd82601187.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
+<meta name="twitter:title" content="网络之keepalive">
+<meta name="twitter:description" content="我们说到keepalive的时候，需要先明确一点，这个keepalive说的是tcp的还是http的。 tcp的keepalive是侧重在保持客户端和服务端的连接，一方会不定期发送心跳包给另一方，当一方端掉的时候，没有断掉的定时发送几次心跳包，如果间隔发送几次，对方都返回的是RST，而不是ACK，那么就释放当前链接。设想一下，如果tcp层没有keepalive的机制，一旦一方断开连接却没有发送FI">
 
 
 
@@ -130,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/30/网络之ACK和Ack number的区别/"/>
+  <link rel="canonical" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/29/网络之keepalive/"/>
 
 
 
 
 
-  <title>网络之ACK与Ack number的区别 | Richard-zhang-iOS的博客</title>
+  <title>网络之keepalive | Richard-zhang-iOS的博客</title>
   
 
 
@@ -273,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/30/网络之ACK和Ack number的区别/">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/29/网络之keepalive/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Richard-zhang-iOS">
@@ -290,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">网络之ACK与Ack number的区别</h1>
+          <h1 class="post-title" itemprop="name headline">网络之keepalive</h1>
         
 
         <div class="post-meta">
@@ -302,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-30T11:13:05+08:00">
-                2018-09-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-29T18:15:23+08:00">
+                2018-09-29
               </time>
             
 
@@ -362,20 +352,36 @@
       
 
       
-        <p>在三次握手发送的数据包中有两个ACK值（Acknowledgement），人们习惯一个大写，一个小写来加以区分。最近Linux运维班的老师在讲网络基础知识的时候又讲到了三次握手四次断开。我在听课的时候总是感觉这两个大小写的ACK和我以前学习网络时候理解的大小写是反着的。课余时间我就在网上查了一下这方面的资料，却看到貌似关于哪个大写哪个小写非常混乱。这样有时就会把刚学习三次握手的新手搞的晕头转向，分不清到底哪个是哪个了。<br>其实ACK也好，ack也好，只不过是个代号而已，叫他张三也行，叫他李四也没事，没有任何影响，因为咱们不会改动那个东西。就算是把名字记反了，对咱们也没有任何影响，大家知道三次握手的数据包里有这么两个东西就行了。<br>一个是确认值(Acknowledgement)，为1便是确认连接。<br>另一个是确认编号(Acknowledgement Number)，即接收到的上一次远端主机传来的seq然后+1，再发送给远端主机。提示远端主机已经成功接收上一次所有数据。</p>
+        <p>我们说到keepalive的时候，需要先明确一点，这个keepalive说的是tcp的还是http的。</p>
+<p>tcp的keepalive是侧重在保持客户端和服务端的连接，一方会不定期发送心跳包给另一方，当一方端掉的时候，没有断掉的定时发送几次心跳包，如果间隔发送几次，对方都返回的是RST，而不是ACK，那么就释放当前链接。设想一下，如果tcp层没有keepalive的机制，一旦一方断开连接却没有发送FIN给另外一方的话，那么另外一方会一直以为这个连接还是存活的，几天，几月。那么这对服务器资源的影响是很大的。</p>
+<p>http的keep-alive一般我们都会带上中间的横杠，普通的http连接是客户端连接上服务端，然后结束请求后，由客户端或者服务端进行http连接的关闭。下次再发送请求的时候，客户端再发起一个连接，传送数据，关闭连接。这么个流程反复。但是一旦客户端发送connection:keep-alive头给服务端，且服务端也接受这个keep-alive的话，两边对上暗号，这个连接就可以复用了，一个http处理完之后，另外一个http数据直接从这个连接走了。</p>
 <a id="more"></a>
-<p><img src="http://i2.51cto.com/images/blog/201711/24/74262cdd6d49f928957d54dd82601187.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>三次握手的数据包，红框内为第一次握手时IP为192.168.56.1的请求端（请求连接端）发送的seq，值为0（实际中此值不一定为0）</p>
-<p><img src="http://i2.51cto.com/images/blog/201711/24/d0616a3e4385d251fc5fa9484b644c3d.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>红框内为第二次握手时IP为192.168.56.130的服务端（被请求连接端）发送的seq，因为是服务端发给请求端的一个新的seq，所以值为0（实际中此值不一定为0）<br>蓝框内为Ack（Acknowledgement Number确认编号）即我理解的小写的<font color="Red"><strong>ack</strong></font>，值为第一次握手时请求端发送来的seq+1即0+1=1</p>
-<p><img src="http://i2.51cto.com/images/blog/201711/24/8e5d2477061d2ca7f7c6072d14c33cd6.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>红框内为第三次握手时IP为192.168.56.1的请求端（请求连接端）发送的seq，因为第一次握手时它发送给服务端的seq为0（黄框内），在上次的基础上+1，值就是1。<br>蓝框内的Ack（Acknowledgement Number确认编号）还是我理解的小写的<font color="Red"><strong>ack</strong></font>，值为第二次握手时请求端发来的seq+1，即绿框中的seq+1，值为1</p>
-<p>那么问题来了，那个起确认连接作用的确认值即我理解的那个大写的<font color="Red"><strong>ACK</strong></font>在哪呢？</p>
-<p><img src="http://i2.51cto.com/images/blog/201711/24/36f4a085db491d0c6f0400bb0ac1ca06.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"><br>在这里。</p>
-<p>展开看一下：<br><img src="http://i2.51cto.com/images/blog/201711/24/2649f5611ac3fee67da81e5a184727e4.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
-<p>对照网上找到的关于第二次握手的标志位的一张图可以看出：<br>确认位即ACK，为1即为确认进行连接<br>同步位即SYN，从第一次握手时，此位就为1<br><img src="http://i2.51cto.com/images/blog/201711/24/2bf62517476cf5c6a78bfa0a99b98b13.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
-<p>下面是网上找到的三次握手的标志图，供参考：</p>
-<p>第一次握手的标志位<br>我们可以看到标志位里面只有个同步位，也就是在做请求(SYN)<br><img src="http://i2.51cto.com/images/blog/201711/24/52954e829f3164359c984ca46461ce2f.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
-<p>第二次握手的标志位<br>我们可以看到标志位里面有个确认位和同步位，也就是在做应答(SYN + ACK)<br><img src="http://i2.51cto.com/images/blog/201711/24/5d9f0acd3c8a016233ac37582b5da26b.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
-<p>第三次握手的标志位<br>我们可以看到标志位里面只有个确认位，也就是再做再次确认(ACK)<br><img src="http://i2.51cto.com/images/blog/201711/24/08f7c65e0da13f4aca64d04ca31bc333.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=" alt="关于TCP协议中三次握手中的ACK和Ack number的区别"></p>
-<p>至此问题结束</p>
+<h1 id="tcp层的keepalive"><a href="#tcp层的keepalive" class="headerlink" title="tcp层的keepalive"></a>tcp层的keepalive</h1><p>tcp的keepalive就是为了检测链接的可用性。主要调节的参数有三个：</p>
+<ul>
+<li>tcp_keepalive_time // 距离上次传送数据多少时间未收到判断为开始检测</li>
+<li>tcp_keepalive_intvl // 检测开始每多少时间发送心跳包</li>
+<li>tcp_keepalive_probes // 发送几次心跳包对方未响应则close连接</li>
+</ul>
+<p>基本上的流程：</p>
+<p>在客户端和服务端进行完三次握手之后，客户端和服务端都处在ESTABLISH状态，这个时候进行正常的PSH和ACK交互，但是一旦一方服务中断了，另一方在距离上次PSH时间tcp_keepalive_time发现对方未发送数据，则开始心跳检测。心跳检测实际就是发送一个PSH的空心跳包，这里说的空心跳包就是包的数据为空，但是TCP包的头部的数据和标识和正常包一样。如果这个包获取到的是RST返回的话，下面就会继续每隔tcp_keepalive_intval的时长发送一个空心跳包，如果tcp_keepalive_probes次心跳包对方都是返回RST而不是ACK，则心跳发起方就判断这个连接已经失效，主动CLOST这个连接。</p>
+<p>这三个参数可以每个TCP连接都不同，使用tcp设置变量的函数可以设置当前tcp连接的这三个对应的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">int setsockopt(int s, int level, int optname,</span><br><span class="line">                 const void *optval, socklen_t optlen)</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.tldp.org/HOWTO/html_single/TCP-Keepalive-HOWTO/" target="_blank" rel="noopener">tcp层的keepalive会在两个场景下比较有用</a>：</p>
+<h2 id="检测连接的一方是否断了"><a href="#检测连接的一方是否断了" class="headerlink" title="检测连接的一方是否断了"></a>检测连接的一方是否断了</h2><p>这里说的连接的一方是否断了包含几种情况：</p>
+<ul>
+<li>连接一方服务中止</li>
+<li>网络不好导致的服务长时间无响应</li>
+<li>连接一方服务重启中</li>
+</ul>
+<p>结合这三种方式就很好理解为什么会有 tcp_keepalive_time, tcp_keepalive_intval, tcp_keepalive_probes三种的设置了。如果是对方服务器进行重启的时候，我们不能根据一次的tcp返回重置信号就判定这个连接失效。相反的，重启之后，这个心跳包一旦正常，这个连接仍然可以继续使用。</p>
+<h2 id="防止因为长时间不用链接导致连接失效"><a href="#防止因为长时间不用链接导致连接失效" class="headerlink" title="防止因为长时间不用链接导致连接失效"></a>防止因为长时间不用链接导致连接失效</h2><p>这个往往在代理或者内网状况下会使用到。一般NAT网络为了资源，会和外网保持一定的资源连接数，而且采用的是淘汰机制，淘汰掉旧的，不用的连接，创建和使用新的连接。如果我们没有心跳检测机制，那么我们的连接在一段时间没有使用的时候，NAT对外的机制会判断对应的对外网络是无用的，淘汰掉旧的，即使这个时候客户端和服务端都还正常服务着，只是长时间未联络了而已。keepalive的机制由于有定时心跳包，自然就能解决这个问题了。</p>
+<h1 id="http层的keep-alive"><a href="#http层的keep-alive" class="headerlink" title="http层的keep-alive"></a>http层的keep-alive</h1><p>http层有个keep-alive, 它主要是用于客户端告诉服务端，这个连接我还会继续使用，在使用完之后不要关闭。</p>
+<p>这个设置会影响web服务的哪几个方面呢？</p>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><p>这个设置首先会在性能上对客户端和服务器端性能上有一定的提升。很好理解的是少了TCP的三次握手和四次挥手，第二次传递数据就可以通过前一个连接直接进行数据交互了。当然会提升服务性能了。</p>
+<h2 id="服务器TIME-WAIT的时间"><a href="#服务器TIME-WAIT的时间" class="headerlink" title="服务器TIME_WAIT的时间"></a>服务器TIME_WAIT的时间</h2><p>由于HTTP服务的发起方一般都是浏览器，即客户端。但是先执行完逻辑，传输完数据的一定是服务端。那么一旦没有keep-alive机制，服务端在传送完数据之后会率先发起连接断开的操作。由于TCP的四次挥手机制，先发起连接断开的一方会在连接断开之后进入到TIME_WAIT的状态达到2MSL之久。设想，如果没有开启HTTP的keep-alive，那么这个TIME_WAIT就会留在服务端，由于服务端资源是非常有限的，我们当然倾向于服务端不会同一时间hold住过多的连接，这种TIME_WAIT的状态应该尽量在客户端保持。那么这个http的keep-alive机制就起到非常重要的作用了。</p>
+<p>所以</p>
+<p>基本上基于这两个原因，现在的浏览器发起web请求的时候，都会带上connection:keep-alive的头了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>TCP的keepalive机制和HTTP的keep-alive机制是说的完全不同的两个东西，tcp的keepalive是在ESTABLISH状态的时候，双方如何检测连接的可用行。而http的keep-alive说的是如何避免进行重复的TCP三次握手和四次挥手的环节。</p>
 
       
     </div>
@@ -406,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/29/网络之keepalive/" rel="next" title="网络之keepalive">
-                <i class="fa fa-chevron-left"></i> 网络之keepalive
+              <a href="/2018/09/28/iOS之CategoryVS.Extension/" rel="next" title="iOS之CategoryVS.Extension">
+                <i class="fa fa-chevron-left"></i> iOS之CategoryVS.Extension
               </a>
             
           </div>
@@ -416,8 +422,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/30/网络之Socket和Http的区别/" rel="prev" title="网络之Socket和Http区别">
-                网络之Socket和Http区别 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/30/网络之ACK和Ack number的区别/" rel="prev" title="网络之ACK与Ack number的区别">
+                网络之ACK与Ack number的区别 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -470,8 +476,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -551,6 +566,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#tcp层的keepalive"><span class="nav-number">1.</span> <span class="nav-text">tcp层的keepalive</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#检测连接的一方是否断了"><span class="nav-number">1.1.</span> <span class="nav-text">检测连接的一方是否断了</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防止因为长时间不用链接导致连接失效"><span class="nav-number">1.2.</span> <span class="nav-text">防止因为长时间不用链接导致连接失效</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#http层的keep-alive"><span class="nav-number">2.</span> <span class="nav-text">http层的keep-alive</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能"><span class="nav-number">2.1.</span> <span class="nav-text">性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器TIME-WAIT的时间"><span class="nav-number">2.2.</span> <span class="nav-text">服务器TIME_WAIT的时间</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
