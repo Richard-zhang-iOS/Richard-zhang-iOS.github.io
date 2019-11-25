@@ -259,6 +259,172 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/12/17/Git-使用技巧/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Richard-zhang-iOS">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Richard-zhang-iOS的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/17/Git-使用技巧/" itemprop="url">git操作总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-17T22:27:13+08:00">
+                2018-12-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/计算机基础/" itemprop="url" rel="index">
+                    <span itemprop="name">计算机基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Reset"><a href="#Reset" class="headerlink" title="Reset"></a>Reset</h2><h3 id="reset-的本质：移动-HEAD-以及它所指向的-branch"><a href="#reset-的本质：移动-HEAD-以及它所指向的-branch" class="headerlink" title="reset 的本质：移动 HEAD 以及它所指向的 branch"></a>reset 的本质：移动 HEAD 以及它所指向的 branch</h3><p>实质上，<strong>reset</strong> 这个指令虽然可以用来撤销 <strong>commit</strong> ，但它的实质行为并不是撤销，而是移动 <strong>HEAD</strong> ，并且「捎带」上 <strong>HEAD</strong> 所指向的 <strong>branch</strong>（如果有的话）。也就是说，<strong>reset</strong> 这个指令的行为其实和它的字面意思 “<strong>reset</strong>“（重置）十分相符：它是用来重置 <strong>HEAD</strong> 以及它所指向的 <strong>branch</strong> 的位置的。</p>
+<p>而 <strong>reset –hard HEAD^</strong> 之所以起到了撤销 <strong>commit</strong> 的效果，是因为它把 <strong>HEAD</strong> 和它所指向的 branch 一起移动到了当前 <strong>commit</strong> 的父 <strong>commit</strong> 上，从而起到了「撤销」的效果：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4428238-6dbab74ae9ad2e1f?imageMogr2/auto-orient/strip|imageView2/2/w/466/format/webp" alt="img"></p>
+<p>git reset</p>
+<p>Git 的历史只能往回看，不能向未来看，所以把 <strong>HEAD</strong> 和 <strong>branch</strong> 往回移动，就能起到撤回 <strong>commit</strong> 的效果。</p>
+<p>所以同理，<strong>reset –hard</strong> 不仅可以撤销提交，还可以用来把 <strong>HEAD</strong> 和 <strong>branch</strong> 移动到其他的任何地方。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --hard branch2</span><br></pre></td></tr></table></figure>
+<p><img src="https://upload-images.jianshu.io/upload_images/4428238-71f7141a3878da7e?imageMogr2/auto-orient/strip|imageView2/2/w/434/format/webp" alt="img"></p>
+<p>git reset –hard branch2</p>
+<h3 id="reset三种模式区别和使用场景"><a href="#reset三种模式区别和使用场景" class="headerlink" title="reset三种模式区别和使用场景"></a>reset三种模式区别和使用场景</h3><h4 id="区别："><a href="#区别：" class="headerlink" title="区别："></a>区别：</h4><ol>
+<li><strong>–hard</strong>：重置位置的同时，直接将 <strong>working Tree工作目录</strong>、 <strong>index 暂存区</strong>及 <strong>repository</strong> 都重置成目标<strong>Reset</strong>节点的內容,所以效果看起来等同于清空暂存区和工作区。</li>
+<li><strong>–soft</strong>：重置位置的同时，保留<strong>working Tree工作目录</strong>和<strong>index暂存区</strong>的内容，只让<strong>repository</strong>中的内容和 <strong>reset</strong> 目标节点保持一致，因此原节点和<strong>reset</strong>节点之间的【差异变更集】会放入<strong>index暂存区</strong>中(<strong>Staged files</strong>)。所以效果看起来就是工作目录的内容不变，暂存区原有的内容也不变，只是原节点和<strong>Reset</strong>节点之间的所有差异都会放到暂存区中。</li>
+<li><strong>–mixed（默认）</strong>：重置位置的同时，只保留<strong>Working Tree工作目录</strong>的內容，但会将 <strong>Index暂存区</strong> 和 <strong>Repository</strong> 中的內容更改和reset目标节点一致，因此原节点和<strong>Reset</strong>节点之间的【差异变更集】会放入<strong>Working Tree工作目录</strong>中。所以效果看起来就是原节点和<strong>Reset</strong>节点之间的所有差异都会放到工作目录中。</li>
+</ol>
+<h4 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景:"></a>使用场景:</h4><ol>
+<li><p><strong>–hard</strong> 要放弃目前本地的所有改变時<strong>，即去掉所有add到暂存区的文件和工作区的文件，可以执行 </strong>git reset -hard HEAD<strong> 来强制恢复git管理的文件夹的內容及状态；(2) </strong>真的想抛弃目标节点后的所有commit**（可能觉得目标节点到原节点之间的commit提交都是错了，之前所有的commit有问题）。</p>
+</li>
+<li><p><strong>–soft</strong>：原节点和<strong>reset</strong>节点之间的【差异变更集】会放入<strong>index暂存区</strong>中(<strong>Staged files</strong>)，所以假如我们之前工作目录没有改过任何文件，也没add到暂存区，那么使用<strong>reset –soft</strong>后，我们可以直接执行 <strong>git commit</strong> 將 index暂存区中的內容提交至 <strong>repository</strong> 中。为什么要这样呢？这样做的使用场景是：假如我们想合并「当前节点」与「<strong>reset</strong>目标节点」之间不具太大意义的 <strong>commit</strong> 记录(可能是阶段性地频繁提交,就是开发一个功能的时候，改或者增加一个文件的时候就<strong>commit</strong>，这样做导致一个完整的功能可能会好多个<strong>commit</strong>点，这时假如你需要把这些<strong>commit</strong>整合成一个<strong>commit</strong>的时候)時，可以考虑使用<strong>reset –soft</strong>来让 <strong>commit</strong> 演进线图较为清晰。总而言之，<strong>可以使用–soft合并commit节点</strong>。</p>
+</li>
+<li><p><strong>–mixed（默认）</strong>：</p>
+<p>使用完<strong>reset –mixed</strong>后，我們可以直接执行 <strong>git add</strong> 将這些改变果的文件內容加入 <strong>index 暂存区</strong>中，再执行 <strong>git commit</strong> 将 <strong>Index暂存区</strong> 中的內容提交至<strong>Repository</strong>中，这样一样可以达到合并<strong>commit</strong>节点的效果（与上面–soft合并commit节点差不多，只是多了git add添加到暂存区的操作）</p>
+<p> 移除所有Index暂存区中准备要提交的文件(Staged files)，我们可以执行 <strong>git reset HEAD</strong> 来 <strong>Unstage</strong> 所有已列入 <strong>Index暂存区</strong> 的待提交的文件。(有时候发现add错文件到暂存区，就可以使用命令)。</p>
+<p> <strong>commit</strong>提交某些错误代码，或者没有必要的文件也被<strong>commit</strong>上去，不想再修改错误再<strong>commit</strong>（因为会留下一个错误<strong>commit</strong>点），可以回退到正确的<strong>commit</strong>点上，然后所有原节点和<strong>reset</strong>节点之间差异会返回工作目录，假如有个没必要的文件的话就可以直接删除了，再<strong>commit</strong>上去就OK了。</p>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/12/17/C语言复习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1636,157 +1802,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://github.com/Richard-zhang-iOS/Richard-zhang-iOS.github.io/2018/09/21/多线程之NSThead/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Richard-zhang-iOS">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Richard-zhang-iOS的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/21/多线程之NSThead/" itemprop="url">多线程之NSThread</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T10:48:18+08:00">
-                2018-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/iOS/" itemprop="url" rel="index">
-                    <span itemprop="name">iOS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>iOS开发中实现多线程的方式主要包括以下一个方面，我们会通过后续的文章一一介绍他们</p>
-<p><strong>pthread</strong>: 跨平台**，适用于多种操作系统，可移植性强，是一套纯C语言的通用API，且线程的生命周期需要程序员自己管理，使用难度较大，所以在实际开发中通常不使用。</p>
-<p><strong>NSThread</strong>: 基于OC语言的API，使得其简单易用，面向对象操作。线程的声明周期由程序员管理，在实际开发中偶尔使用，底层实现是基于pthread。</p>
-<p><strong><a href="https://richard-zhang-ios.github.io/2018/09/20/多线程之GCD/" target="_blank" rel="noopener">GCD</a></strong>: 基于C语言的API，充分利用设备的多核，旨在替换NSThread等线程技术。线程的生命周期由系统自动管理，在实际开发中经常使用。</p>
-<p><strong><a href="https://richard-zhang-ios.github.io/2018/09/20/多线程之NSOperation/" target="_blank" rel="noopener">NSOperation</a></strong>: 基于OC语言API，底层是GCD，增加了一些更加简单易用的功能，使用更加面向对象。线程生命周期由系统自动管理，在实际开发中经常使用。</p>
-<p>本文详细介绍了pthread和NSThread在iOS中的使用，主要包括以下几个方面</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/21/多线程之NSThead/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1841,7 +1856,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-count">25</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1863,7 +1878,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1916,7 +1931,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; 2017 &mdash; <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
